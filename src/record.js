@@ -6,6 +6,8 @@ const { click, clickMove, keyPress } = require("./service/mirrorService");
 
 const createActionContainer = document.getElementById("createActionContainer");
 const canvas = document.createElement("canvas");
+const menus = document.getElementById("menus");
+const terminal = document.getElementById("terminal");
 
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
@@ -14,7 +16,7 @@ canvas.width = screenWidth - 50;
 canvas.height = screenHeight - 40;
 const ctx = canvas.getContext("2d");
 
-let terminal = document.getElementById("terminal");
+
 terminal.style.padding = '1em';
 step = 0;
 let isDragging = false;
@@ -214,7 +216,7 @@ function executeRecords(){
         prepRunWindow();
         log(terminal, "run started");
         const action = await searchActions(actionName);
-        triggerAction(action[0], "run", 2000)
+        const totalWait = triggerAction(action[0], "run", 2000)
         pullUpWindow(totalWait, prepDemoWindow)
     });
 
@@ -223,14 +225,9 @@ function executeRecords(){
         prepDemoWindow();
         log(terminal, "demo started");
         const action = await searchActions(actionName);
-        const totalWait = triggerAction(action[0], "demo", 2000)
-        pullUpWindow(totalWait, prepDemoWindow)
+        triggerAction(action[0], "demo", 2000)
     });
-
-    
 }
-
-
 
 function triggerAction(action, executionType, milliOffset) {
     let totalWait = milliOffset;
@@ -288,6 +285,7 @@ function pullUpWindow(wait, desiredWindow) {
 
 async function prepRunWindow() {
     createActionContainer.style.display = "none";
+    menus.style.display = "none";
     window.scrollTo({
         top: 0
     });
@@ -303,6 +301,7 @@ async function prepRunWindow() {
 
 async function prepDemoWindow() {
     createActionContainer.style.display = "inline";
+    menus.style.display = "block";
     window.scrollTo({
         top: 0
     });
