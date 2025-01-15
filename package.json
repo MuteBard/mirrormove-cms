@@ -1,0 +1,24 @@
+{
+  "name": "mirrormove",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nw src/",
+    "win": "nwbuild --platform win --arch x64 --outDir dist/run --glob=false src",
+    "macos": "nwbuild --platform osx --outDir dist/run --glob=false src",
+    "clean": "node cleanup.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@nut-tree-fork/nut-js": "^4.2.4",
+    "fs-extra": "^11.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "nw": "^0.90.0-sdk"
+  },
+  "devDependencies": {
+    "nw-builder": "^4.8.0"
+  }
+}
