@@ -22,7 +22,7 @@ let recordedData = [];
 let keyPressStartTime = null;
 let fileName = "saveLogs";
 let isLogging = false;
-let boxIndex = 1;
+let moveCount = 0;
 
 function setInitialState() {
     isDragging = false;
@@ -33,7 +33,8 @@ function setInitialState() {
 }
 
 saveRecords();
-runRecords();
+executeRecords();
+// toggleButtonsState();
 container.appendChild(canvas);
 
 
@@ -55,6 +56,7 @@ function listenToMovement() {
         if (!isLogging) return;
         isDragging = true;
         step++;
+        moveCount = 0;
         const data = {
             steps: step,
             action : "click",
@@ -68,20 +70,24 @@ function listenToMovement() {
     });
 
     // Add mousemove event listener to track mouse coordinates during drag
-    document.addEventListener('mousemove', function(event) {
+    document.addEventListener("mousemove", function (event) {
         if (!isLogging) return;
+
         if (isDragging) {
-            step++;
-            const data = {
-                steps: step,
-                action : "click_move",
-                x: event.clientX,
-                y: event.clientY,
-                key: null,
-                time: Date.now(),
-                duration: null
+            moveCount++;
+            if (moveCount % 10 == 0) {
+                step++;
+                const data = {
+                    steps: step,
+                    action: "click_move",
+                    x: event.clientX,
+                    y: event.clientY,
+                    key: null,
+                    time: Date.now(),
+                    duration: null,
+                };
+                recordedData.push(data);
             }
-            recordedData.push(data);
         }
     });
 
@@ -89,6 +95,7 @@ function listenToMovement() {
     document.addEventListener('mouseup', function() {
         if (!isLogging) return;
         isDragging = false;
+        moveCount = 0;
     });
 
     // Add a keydown event listener to the document
@@ -122,17 +129,17 @@ function listenToMovement() {
 
 
 function saveRecords() {
-    const startLoggingButton = document.getElementById("startLogging");
-    const saveLoggingButton = document.getElementById("saveLogging");
-    const cancelLoggingButton = document.getElementById("cancelLogging");
+    const logActionButton = document.getElementById("logAction");
+    const saveActionButton = document.getElementById("saveAction");
+    const cancelActionButton = document.getElementById("cancelAction");
 
-    startLoggingButton.addEventListener("click", () => {
+    logActionButton.addEventListener("click", () => {
         isLogging = true
         log(terminal, "Logging started")
         safeExec(terminal, listenToMovement)
     });
 
-    saveLoggingButton.addEventListener("click", () => {
+    saveActionButton.addEventListener("click", () => {
         isLogging = false;
         log(terminal, "Logging saved")
         const path = `./data/${fileName}.json`;
@@ -142,11 +149,15 @@ function saveRecords() {
         const filteredData = [...reversedCopy.slice(index + 1)].reverse();
         const steps = filteredData;
 
+        const actionInput = document.getElementById('actionNameInput');
+        const actionName = actionInput.value;
 
         const data = {
-            name: "this_is_test_6",
+            name: actionName,
             steps 
         }
+
+        log(terminal, JSON.stringify(data))
 
         safeExec(terminal, async () => {
             // await searchActions(terminal, "test")
@@ -156,7 +167,7 @@ function saveRecords() {
         })
     });
 
-    cancelLoggingButton.addEventListener("click", () => {
+    cancelActionButton.addEventListener("click", () => {
         setInitialState();
         log(terminal, "Logging canceled")
         log(terminal, isLogging)
@@ -168,18 +179,26 @@ function saveRecords() {
     });
 }
 
-function runRecords(){
+function executeRecords(){
     const runActionButton = document.getElementById("runAction");
+    const demoActionButton = document.getElementById("demoAction");
+
     runActionButton.addEventListener("click", async () => {
         setInitialState();
-        prepWindow();
-
+        prepRunWindow();
         const action = await getAction(15);
-        log(terminal, triggerAction(action[0], 2000))
+        log(terminal, triggerAction(action[0], "run", 2000))
+    });
+
+    demoActionButton.addEventListener("click", async () => {
+        setInitialState();
+        prepDemoWindow();
+        const action = await getAction(15);
+        log(terminal, triggerAction(action[0], "demo", 2000))
     });
 }
 
-function triggerAction(action, milliOffset) {
+function triggerAction(action, executionType, milliOffset) {
     let wait = milliOffset;
     const timedSteps = action.steps.map((step, index, steps) => {
         const {time, position, act} = getResponse(steps[index - 1], step, steps[index + 1])
@@ -194,23 +213,30 @@ function triggerAction(action, milliOffset) {
 
     timedSteps.map((ts) => {
         setTimeout(() => {
-
             let position = ts?.position;
             let action = ts?.step?.action;
             let key = ts?.step?.key;
 
-            if (action == "key press") {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                log(terminal, ts?.step?.key);
-                createBoxLetter(key || "mouse")
-                keyPress(key, terminal)
+            if (action === "key press") {
+                if (executionType === "run"){
+                    keyPress(key, terminal)
+                }
+                else if(executionType === "demo"){
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    createBoxLetter(key || "mouse")
+                }
+                log(terminal, ts?.step?.key);  
             } 
             else {
                 if (ts?.act?.next) {
-                    const {x, y, width, height} = createBoxLetter("");
-                    ctx.clearRect(x, y, width, height);
-                    clickMove(position);
-                    drawLine(position);
+                    if (executionType === "run"){
+                        clickMove(position);
+                    }
+                    else if(executionType === "demo"){
+                        const {x, y, width, height} = createBoxLetter("");
+                        ctx.clearRect(x, y, width, height);
+                        drawLine(position);
+                    }
                     log(terminal, position)
                 }
             }
@@ -221,11 +247,25 @@ function triggerAction(action, milliOffset) {
     return wait
 }
 
-async function prepWindow() {
+async function prepRunWindow() {
     container.style.display = "none";
 	if (typeof nw !== "undefined" && nw.App) {
 		const win = nw.Window.get();
+        win.transparent = true; 
+        win.setTransparent(win.transparent);
+        win.frame = false;
         win.minimize();
+        click({x: screenWidth /2, y: screenHeight/2});
+	}
+}
+
+async function prepDemoWindow() {
+    container.style.display = "inline";
+	if (typeof nw !== "undefined" && nw.App) {
+		const win = nw.Window.get();
+        win.transparent = false; 
+        win.setTransparent(win.transparent); 
+        win.frame = true;
         click({x: screenWidth /2, y: screenHeight/2});
 	}
 }
@@ -290,3 +330,15 @@ function createBoxLetter(letter) {
 		height
 	};
 }
+
+// function toggleButtonsState() {
+//     const inputElement = document.getElementById('actionNameInput');
+//     const buttonsToDisable = document.querySelectorAll('.disable-on-empty');
+//     inputElement.addEventListener('input', () => {
+//         const isInputEmpty = inputElement.value.trim() === '';
+
+//         buttonsToDisable.forEach(button => {
+//             button.disabled = isInputEmpty; 
+//         });
+//     });
+// }

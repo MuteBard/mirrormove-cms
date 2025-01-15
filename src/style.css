@@ -1,6 +1,9 @@
 body {
 	background-color: transparent !important;
+	font-family: Roboto, sans-serif;
 }
+
+
 
 canvas {
 	border: 5px dotted red; /* Add a border for visibility */
@@ -65,6 +68,73 @@ canvas {
 	display: none;
 }
 
+.search-container {
+	/* display: flex;
+	align-items: center; */
+	max-width: 400px;
+	/* margin: 0 auto; */
+}
+.search-input {
+	/* flex: 1; */
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+.search-button {
+	padding: 8px 16px;
+	background-color: #007bff;
+	color: white;
+	border: none;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+
+.create-action-container {
+	display: flex;
+	flex-direction: column;
+	margin: 1em;
+}
+
+.record-action-container {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 2em;
+}
+
+.save-action-container {
+	display: flex;
+	/* margin-top: 1em; */
+}
+
+.save-action-container > *:not(:first-child) {
+    margin-left: 2em;
+}
+
+.input-action-container {
+	display: flex;
+	margin-top: 1em;
+	flex-direction: column;
+}
+
+.run-action-container {
+	display: flex;
+	justify-content: left;
+	margin-top: 2em;
+}
+
+.run-action-container > *:not(:first-child) {
+    margin-left: 2em;
+}
+
+.required {
+	color: red;
+}
+.requiredText {
+	display: flex;
+}
+
+/* ---------------------------------------------- */
 .menuContainer {
 	margin-top: 2em;
 	display: flex;
