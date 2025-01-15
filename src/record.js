@@ -1,7 +1,7 @@
 const { log, safeExec } = require("./util/log");
 const { makeFile } = require("./service/fileManager");
 const { searchActions, createAction, getAction, deleteAction } = require("./service/actionService");
-const { click, clickPress, clickMove, clickRelease, keyPress } = require("./service/mirrorService");
+const { click, clickMove, keyPress } = require("./service/mirrorService");
 
 
 const container = document.getElementById("container");
@@ -183,7 +183,7 @@ function triggerAction(action, milliOffset) {
     let wait = milliOffset;
     const timedSteps = action.steps.map((step, index, steps) => {
         const {time, position, act} = getResponse(steps[index - 1], step, steps[index + 1])
-        wait += time;
+        wait += time + 500;
         return {
             step,
             wait,
@@ -206,17 +206,13 @@ function triggerAction(action, milliOffset) {
                 keyPress(key, terminal)
             } 
             else {
-                const {x, y, width, height} = createBoxLetter("");
-                ctx.clearRect(x, y, width, height);
-
-                // if (action === "click") { clickPress(terminal) } 
-                
-                clickMove(position, terminal);
-                drawLine(position);
-                log(terminal, position)
-                // if (
-                //     ts?.act?.next != "click" && 
-                //     ts?.act?.next != "click_move") { clickRelease(terminal); }
+                if (ts?.act?.next) {
+                    const {x, y, width, height} = createBoxLetter("");
+                    ctx.clearRect(x, y, width, height);
+                    clickMove(position);
+                    drawLine(position);
+                    log(terminal, position)
+                }
             }
         }, ts.wait)
     })
@@ -242,12 +238,10 @@ function getResponse(prevStep, currStep, nextStep) {
     let nextPos = !nextStep ? currPos : { x: nextStep.x, y: nextStep.y }
 
     let time = currTime - prevTime;
-    let position = {x1 : currPos.x, y1: currPos.y, x2 : nextPos.x, y2: nextPos.y, }
+    let position = {x1 : currPos.x, y1: currPos.y, x2: nextPos.x, y2: nextPos.y, }
 
     let prevAction = !prevStep ? null : prevStep.action;
     let nextAction = !nextStep ? null : nextStep.action;
-
-    // log(terminal, "HEY "+JSON.stringify(nextStep))
 
 
     return { 
