@@ -4,7 +4,7 @@ const { searchActions, createAction, getAction, deleteAction } = require("./serv
 const { click, clickMove, keyPress } = require("./service/mirrorService");
 
 
-const container = document.getElementById("container");
+const createActionContainer = document.getElementById("createActionContainer");
 const canvas = document.createElement("canvas");
 
 const screenWidth = window.innerWidth;
@@ -22,7 +22,6 @@ let recordedData = [];
 let keyPressStartTime = null;
 let isLogging = false;
 let moveCount = 0;
-let createdAction;
 
 function setInitialState() {
     isDragging = false;
@@ -35,7 +34,7 @@ saveRecords();
 executeRecords();
 hideContainersOnStart()
 toggleButtonsState();
-container.appendChild(canvas);
+createActionContainer.appendChild(canvas);
 
 function hideContainersOnStart() {
     const recordActionContainer = document.getElementById("record-action-container");
@@ -156,6 +155,9 @@ function saveRecords() {
 
     logActionButton.addEventListener("click", () => {
         isLogging = true
+        window.scrollTo({
+            top: 0
+        });
         log(terminal, "Logging started")
         safeExec(terminal, listenToMovement)
     });
@@ -181,7 +183,7 @@ function saveRecords() {
 
         safeExec(terminal, async () => {
             // await searchActions(terminal, "test")
-            createdAction = await createAction(data);
+            await createAction(data);
             // await getAction(terminal, 9)
             // await deleteAction(terminal, 7)
         })
@@ -204,31 +206,40 @@ function saveRecords() {
 function executeRecords(){
     const runActionButton = document.getElementById("runAction");
     const demoActionButton = document.getElementById("demoAction");
-    const actionId = createdAction?.id;
+    const inputElement = document.getElementById('actionNameInput');
+    const actionName = inputElement.value;
 
     runActionButton.addEventListener("click", async () => {
         setInitialState();
         prepRunWindow();
-        const action = await getAction(actionId);
-        log(terminal, triggerAction(action[0], "run", 2000))
+        log(terminal, "run started");
+        const action = await searchActions(actionName);
+        triggerAction(action[0], "run", 2000)
+        pullUpWindow(totalWait, prepDemoWindow)
     });
 
     demoActionButton.addEventListener("click", async () => {
         setInitialState();
         prepDemoWindow();
-        const action = await getAction(actionId);
-        log(terminal, triggerAction(action[0], "demo", 2000))
+        log(terminal, "demo started");
+        const action = await searchActions(actionName);
+        const totalWait = triggerAction(action[0], "demo", 2000)
+        pullUpWindow(totalWait, prepDemoWindow)
     });
+
+    
 }
 
+
+
 function triggerAction(action, executionType, milliOffset) {
-    let wait = milliOffset;
+    let totalWait = milliOffset;
     const timedSteps = action.steps.map((step, index, steps) => {
         const {time, position, act} = getResponse(steps[index - 1], step, steps[index + 1])
-        wait += time + 500;
+        totalWait += time;
         return {
             step,
-            wait,
+            wait: totalWait,
             position,
             act
         }
@@ -242,11 +253,11 @@ function triggerAction(action, executionType, milliOffset) {
 
             if (action === "key press") {
                 if (executionType === "run"){
-                    keyPress(key, terminal)
+                    keyPress(key)
                 }
                 else if(executionType === "demo"){
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    createBoxLetter(key || "mouse")
+                    createBoxLetter(key)
                 }
                 log(terminal, ts?.step?.key);  
             } 
@@ -266,12 +277,20 @@ function triggerAction(action, executionType, milliOffset) {
         }, ts.wait)
     })
 
-    clickRelease(terminal)
-    return wait
+
+    return totalWait;
+}
+function pullUpWindow(wait, desiredWindow) {
+    setTimeout(() => {
+        desiredWindow();
+    }, wait)
 }
 
 async function prepRunWindow() {
-    container.style.display = "none";
+    createActionContainer.style.display = "none";
+    window.scrollTo({
+        top: 0
+    });
 	if (typeof nw !== "undefined" && nw.App) {
 		const win = nw.Window.get();
         win.transparent = true; 
@@ -283,7 +302,10 @@ async function prepRunWindow() {
 }
 
 async function prepDemoWindow() {
-    container.style.display = "inline";
+    createActionContainer.style.display = "inline";
+    window.scrollTo({
+        top: 0
+    });
 	if (typeof nw !== "undefined" && nw.App) {
 		const win = nw.Window.get();
         win.transparent = false; 
