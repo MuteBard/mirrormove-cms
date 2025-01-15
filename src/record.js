@@ -20,7 +20,6 @@ step = 0;
 let isDragging = false;
 let recordedData = [];
 let keyPressStartTime = null;
-let fileName = "saveLogs";
 let isLogging = false;
 let moveCount = 0;
 let createdAction;
@@ -29,7 +28,6 @@ function setInitialState() {
     isDragging = false;
     recordedData = [];
     keyPressStartTime = null;
-    fileName = "saveLogs";
     isLogging = false;
 }
 
@@ -165,7 +163,6 @@ function saveRecords() {
     saveActionButton.addEventListener("click", () => {
         isLogging = false;
         log(terminal, "Logging saved")
-        const path = `./data/${fileName}.json`;
 
         const reversedCopy = [...recordedData].reverse();
         const index = reversedCopy.findIndex((data) => data.action === "click");
@@ -219,7 +216,7 @@ function executeRecords(){
     demoActionButton.addEventListener("click", async () => {
         setInitialState();
         prepDemoWindow();
-        const action = await getAction(15);
+        const action = await getAction(actionId);
         log(terminal, triggerAction(action[0], "demo", 2000))
     });
 }
