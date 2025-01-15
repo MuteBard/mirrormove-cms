@@ -11,13 +11,14 @@ async function searchActions(name) {
         params,
     });
     const result = parseData(response.data);
-    return response.data;
+    return result;
 }
 
 async function createAction(data) {
     const body = prepareBody(data);
     const response = await axios.post(`${contentServiceHost}/action`, body);
-    return response.data;
+    const result = parseData(response.data);
+    return result;
 }
 
 async function getAction(id) {

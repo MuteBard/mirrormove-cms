@@ -6,7 +6,7 @@ body {
 
 
 canvas {
-	border: 5px dotted red; /* Add a border for visibility */
+	border: 5px dotted cyan; /* Add a border for visibility */
 }
 
 .custom-button,
@@ -132,6 +132,7 @@ canvas {
 }
 .requiredText {
 	display: flex;
+	color: cyan
 }
 
 /* ---------------------------------------------- */

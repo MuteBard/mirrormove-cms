@@ -23,6 +23,7 @@ let keyPressStartTime = null;
 let fileName = "saveLogs";
 let isLogging = false;
 let moveCount = 0;
+let createdAction;
 
 function setInitialState() {
     isDragging = false;
@@ -34,9 +35,31 @@ function setInitialState() {
 
 saveRecords();
 executeRecords();
-// toggleButtonsState();
+hideContainersOnStart()
+toggleButtonsState();
 container.appendChild(canvas);
 
+function hideContainersOnStart() {
+    const recordActionContainer = document.getElementById("record-action-container");
+    const runActionContainer = document.getElementById("run-action-container");
+    recordActionContainer.style.display = 'none';
+    runActionContainer.style.display = 'none';
+}
+ 
+function toggleButtonsState() {
+    const inputElement = document.getElementById('actionNameInput');
+    const containersToHide = document.querySelectorAll('.inputToggled');
+    inputElement.addEventListener('input', () => {
+        const isInputEmpty = inputElement.value.trim() === '';
+        containersToHide.forEach(container => {
+                if (isInputEmpty) {
+                    container.style.display = 'none';
+                } else {
+                    container.style.display = 'flex';
+                }
+            });
+    });
+}
 
 window.addEventListener('keydown', function(event) {
     if (event.keyCode === 27 || event.key === 'Escape') { 
@@ -161,10 +184,12 @@ function saveRecords() {
 
         safeExec(terminal, async () => {
             // await searchActions(terminal, "test")
-            await createAction(data)
+            createdAction = await createAction(data);
             // await getAction(terminal, 9)
             // await deleteAction(terminal, 7)
         })
+        const containersToShow = document.querySelectorAll('.saveToggled');
+        containersToShow.forEach(container => container.style.display = 'flex');
     });
 
     cancelActionButton.addEventListener("click", () => {
@@ -182,11 +207,12 @@ function saveRecords() {
 function executeRecords(){
     const runActionButton = document.getElementById("runAction");
     const demoActionButton = document.getElementById("demoAction");
+    const actionId = createdAction?.id;
 
     runActionButton.addEventListener("click", async () => {
         setInitialState();
         prepRunWindow();
-        const action = await getAction(15);
+        const action = await getAction(actionId);
         log(terminal, triggerAction(action[0], "run", 2000))
     });
 
@@ -331,14 +357,4 @@ function createBoxLetter(letter) {
 	};
 }
 
-// function toggleButtonsState() {
-//     const inputElement = document.getElementById('actionNameInput');
-//     const buttonsToDisable = document.querySelectorAll('.disable-on-empty');
-//     inputElement.addEventListener('input', () => {
-//         const isInputEmpty = inputElement.value.trim() === '';
 
-//         buttonsToDisable.forEach(button => {
-//             button.disabled = isInputEmpty; 
-//         });
-//     });
-// }
