@@ -157,7 +157,6 @@ function listenToMovement() {
     
 }
 
-
 function saveRecords() {
     const logActionButton = document.getElementById("logAction");
     const saveActionButton = document.getElementById("saveAction");
@@ -347,7 +346,6 @@ function drawLine(position){
     ctx.stroke();
 }
 
-
 function createBoxLetter(letter) {
 	const width = 50;
 	const height = 50;
@@ -374,7 +372,6 @@ function createBoxLetter(letter) {
 		height
 	};
 }
-
 
 function actionEndCap() {
     const data = {
