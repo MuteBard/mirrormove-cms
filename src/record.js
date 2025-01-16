@@ -143,7 +143,7 @@ function listenToMovement() {
         if (keyPressStartTime) {
             const data = {
                 steps: step,
-                action : "key press",
+                action : "key_press",
                 x: null,
                 y: null,
                 key: event.key,
@@ -236,12 +236,12 @@ function executeRecords(){
         triggerAction(action[0], "demo", 2000)
     });
 }
-
+hah3214356
 function triggerAction(action, executionType, milliOffset) {
     let totalWait = milliOffset;
     const timedSteps = action.steps.map((step, index, steps) => {
         const {time, position, act} = getResponse(steps[index - 1], step, steps[index + 1])
-        totalWait += time + 500;
+        totalWait += time;
         return {
             step,
             wait: totalWait,
@@ -255,7 +255,7 @@ function triggerAction(action, executionType, milliOffset) {
             let action = ts?.step?.action;
             let key = ts?.step?.key;
 
-            if (action === "key press") {
+            if (action === "key_press") {
                 if (executionType === "run"){
                     await keyPress(key)
                 }
@@ -264,7 +264,7 @@ function triggerAction(action, executionType, milliOffset) {
                     createBoxLetter(key)
                 }
                 log(terminal, ts?.step?.key);  
-            } 
+            }
             else {
                 if (executionType === "run"){
                     await clickMove(position);
@@ -318,7 +318,8 @@ function getResponse(prevStep, currStep, nextStep) {
     let currPos = { x: currStep.x, y: currStep.y }
     let nextPos = !nextStep ? currPos : { x: nextStep.x, y: nextStep.y }
 
-    let time = currTime - prevTime;
+    let duration = currStep?.duration || 0;
+    let time = currTime - prevTime + (duration * 2 + 200);
     let position = {x1 : currPos.x, y1: currPos.y, x2: nextPos.x, y2: nextPos.y, }
 
     let prevAction = !prevStep ? null : prevStep.action;
