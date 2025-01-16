@@ -66,6 +66,14 @@ window.addEventListener('keydown', function(event) {
     }
 });
 
+window.addEventListener('keydown', function(event) {
+    // Check if the pressed key is the spacebar (key code 32)
+    if (event.keyCode === 32) {
+        // Prevent the default behavior of scrolling down when the spacebar is pressed
+        event.preventDefault();
+    }
+});
+
 function listenToMovement() {
     
     log(terminal, true);
@@ -233,7 +241,7 @@ function triggerAction(action, executionType, milliOffset) {
     let totalWait = milliOffset;
     const timedSteps = action.steps.map((step, index, steps) => {
         const {time, position, act} = getResponse(steps[index - 1], step, steps[index + 1])
-        totalWait += time;
+        totalWait += time + 500;
         return {
             step,
             wait: totalWait,
@@ -241,16 +249,15 @@ function triggerAction(action, executionType, milliOffset) {
             act
         }
     })
-
     timedSteps.map((ts) => {
-        setTimeout(() => {
+        setTimeout(async () => {
             let position = ts?.position;
             let action = ts?.step?.action;
             let key = ts?.step?.key;
 
             if (action === "key press") {
                 if (executionType === "run"){
-                    keyPress(key)
+                    await keyPress(key)
                 }
                 else if(executionType === "demo"){
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -259,18 +266,17 @@ function triggerAction(action, executionType, milliOffset) {
                 log(terminal, ts?.step?.key);  
             } 
             else {
-                if (ts?.act?.next) {
-                    if (executionType === "run"){
-                        clickMove(position);
-                    }
-                    else if(executionType === "demo"){
-                        const {x, y, width, height} = createBoxLetter("");
-                        ctx.clearRect(x, y, width, height);
-                        drawLine(position);
-                    }
-                    log(terminal, position)
+                if (executionType === "run"){
+                    await clickMove(position);
                 }
+                else if(executionType === "demo"){
+                    const {x, y, width, height} = createBoxLetter("");
+                    ctx.clearRect(x, y, width, height);
+                    drawLine(position);
+                }
+                log(terminal, position)
             }
+            
         }, ts.wait)
     })
 
@@ -284,32 +290,23 @@ function pullUpWindow(wait, desiredWindow) {
 }
 
 async function prepRunWindow() {
-    createActionContainer.style.display = "none";
-    menus.style.display = "none";
     window.scrollTo({
         top: 0
     });
 	if (typeof nw !== "undefined" && nw.App) {
 		const win = nw.Window.get();
-        win.transparent = true; 
-        win.setTransparent(win.transparent);
-        win.frame = false;
         win.minimize();
         click({x: screenWidth /2, y: screenHeight/2});
 	}
 }
 
 async function prepDemoWindow() {
-    createActionContainer.style.display = "inline";
-    menus.style.display = "block";
     window.scrollTo({
         top: 0
     });
 	if (typeof nw !== "undefined" && nw.App) {
 		const win = nw.Window.get();
-        win.transparent = false; 
-        win.setTransparent(win.transparent); 
-        win.frame = true;
+        win.enterFullscreen();
         click({x: screenWidth /2, y: screenHeight/2});
 	}
 }
