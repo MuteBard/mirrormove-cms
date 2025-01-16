@@ -170,6 +170,7 @@ function saveRecords() {
         });
         log(terminal, "Logging started")
         safeExec(terminal, listenToMovement)
+
     });
 
     saveActionButton.addEventListener("click", () => {
@@ -236,7 +237,6 @@ function executeRecords(){
         triggerAction(action[0], "demo", 2000)
     });
 }
-hah3214356
 function triggerAction(action, executionType, milliOffset) {
     let totalWait = milliOffset;
     const timedSteps = action.steps.map((step, index, steps) => {
