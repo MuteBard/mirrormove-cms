@@ -4,7 +4,7 @@ const { searchActions, createAction, getAction, deleteAction } = require("./serv
 const { click, clickMove, keyPress } = require("./service/mirrorService");
 
 
-const createActionContainer = document.getElementById("createActionContainer");
+const canvasContainer = document.getElementById("canvasContainer");
 const canvas = document.createElement("canvas");
 const menus = document.getElementById("menus");
 const terminal = document.getElementById("terminal");
@@ -36,7 +36,7 @@ saveRecords();
 executeRecords();
 hideContainersOnStart()
 toggleButtonsState();
-createActionContainer.appendChild(canvas);
+canvasContainer.appendChild(canvas);
 
 function hideContainersOnStart() {
     const recordActionContainer = document.getElementById("record-action-container");
@@ -320,12 +320,11 @@ function getResponse(prevStep, currStep, nextStep) {
     let nextPos = !nextStep ? currPos : { x: nextStep.x, y: nextStep.y }
 
     let duration = currStep?.duration || 0;
-    let time = currTime - prevTime + (duration * 2 + 200);
+    let time = currTime - prevTime + (duration + 500);
     let position = {x1 : currPos.x, y1: currPos.y, x2: nextPos.x, y2: nextPos.y, }
 
     let prevAction = !prevStep ? null : prevStep.action;
     let nextAction = !nextStep ? null : nextStep.action;
-
 
     return { 
         time, 
