@@ -182,6 +182,8 @@ function saveRecords() {
         const filteredData = [...reversedCopy.slice(index + 1)].reverse();
         const steps = filteredData;
 
+        steps.push(actionEndCap())
+
         const actionInput = document.getElementById('actionNameInput');
         const actionName = actionInput.value;
 
@@ -265,7 +267,7 @@ function triggerAction(action, executionType, milliOffset) {
                 }
                 log(terminal, ts?.step?.key);  
             }
-            else {
+            else if (action === "click" || action === "click_move" ){
                 if (executionType === "run"){
                     await clickMove(position);
                 }
@@ -374,3 +376,15 @@ function createBoxLetter(letter) {
 }
 
 
+function actionEndCap() {
+    const data = {
+        steps: -1,
+        action : "no_op",
+        x: null,
+        y: null,
+        key: null,
+        time: Date.now(),
+        duration: 500
+    }
+    return data
+}
