@@ -5,38 +5,41 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div id="canvasContainer"></div>
-    <div id="menus">
-        <div id="actionLoggingMenu" class="create-action-container">
-            <div class="input-action-container">
-                <div class="requiredText"><h2>Action Name</h2><h2 class="required">*</h2></div>
-                <div class="search-container">
-                    <input id="actionNameInput" type="text" class="search-input" placeholder="Add text">
+    <div id="createActions">
+        <div id="canvasContainer"></div>
+        <div id="menus">
+            <div id="actionLoggingMenu" class="create-action-container">
+                <div class="input-action-container">
+                    <div class="requiredText"><h2>Action Name</h2><h2 class="required">*</h2></div>
+                    <div class="search-container">
+                        <input id="actionNameInput" type="text" class="search-input" placeholder="Add text">
+                    </div>
+                </div>
+                <div id="record-action-container" class="record-action-container inputToggled">
+                    <div class="log-action-button-container">
+                        <button id="logAction" class="custom-button">Start Recording</button>
+                    </div>
+                    <div class="save-action-container">
+                        <button id="cancelAction" class="custom-button cancel-button">Cancel</button>
+                        <button id="saveAction" class="custom-button">Save</button>
+                    </div>
+                </div>
+                <div id="run-action-container" class="run-action-container saveToggled">
+                    <button id="demoAction" class="custom-button">Test Run</button>
+                    <button id="runAction" class="custom-button">Run</button>
                 </div>
             </div>
-            <div id="record-action-container" class="record-action-container inputToggled">
-                <div class="log-action-button-container">
-                    <button id="logAction" class="custom-button">Start Recording</button>
-                </div>
-                <div class="save-action-container">
-                    <button id="cancelAction" class="custom-button cancel-button">Cancel</button>
-                    <button id="saveAction" class="custom-button">Save</button>
-                </div>
-            </div>
-            <div id="run-action-container" class="run-action-container saveToggled">
-                <button id="demoAction" class="custom-button">Test Run</button>
-                <button id="runAction" class="custom-button">Run</button>
-            </div>
+            <div id="terminal"></div>
         </div>
-        <div id="terminal"></div>
     </div>
+    <div id="listActions"></div>
 </body>
 
   
-<script src="./record.js"></script>
+<script src="./create.js"></script>
 
 
 <script>
-    
+ 
 </script>
 </html>
