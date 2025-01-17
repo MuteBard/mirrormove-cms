@@ -78,7 +78,7 @@ function parseData(data) {
 
 
 function formatDate(date) {    
-    return dayjs(date).format('MMMM D, YYYY h:mm A');
+    return dayjs(date).format('ddd, MM-DD-YYYY h:mm A');
 }
 
 exports.searchActions = searchActions;

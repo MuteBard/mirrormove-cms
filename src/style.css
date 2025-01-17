@@ -197,6 +197,7 @@ input::placeholder, textarea::placeholder {
 	margin: 2em;
 }
 
+
 th,
 td {
 	text-align: left;
@@ -211,9 +212,21 @@ th {
 
 }
 
+.radtl {
+	border-top-left-radius: 15px;
+}
+
+.radtr {
+	border-top-right-radius: 15px;
+}
+
 tr {
 	background-color: #3d3b63;
 	color: #e7e7ef;
+}
+
+tbody tr:hover {
+    background-color: #513b63; /* Background color on hover for the entire row */
 }
 
 

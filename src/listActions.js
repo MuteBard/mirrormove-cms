@@ -7,15 +7,21 @@ window.addEventListener('keydown', function(event) {
 });
 
 
+const actionListRows = document.getElementById('actionListRows');
 
 getTableData("css")
 
 
+document.getElementById('actionListRows').addEventListener('click', (event) => {
+    const clickedRow = event.target.closest('tr'); // Find the closest 'tr' element
+
+    if (clickedRow) {
+        const id = clickedRow.querySelector('.row-id').textContent;
+        logger(id)
+    }
+});
 
 async function getTableData(searchTerm){
-   
-    const actionListRows = document.getElementById('actionListRows');
-    
     const data = await searchActions(searchTerm)
    
     data.map((rowData) => {
@@ -26,7 +32,12 @@ async function getTableData(searchTerm){
 
 function createNewRow(data){
     let row = document.createElement('tr');
-    logger(data)
+
+    let idCell = document.createElement('td');
+    idCell.style.display = 'none';
+    idCell.textContent = data.id;
+    idCell.classList.add('row-id');
+    row.append(idCell);
 
     const orderedAllowedFields = ["name", "description", "seconds", "createdAt"]
     orderedAllowedFields.forEach(key => {
@@ -34,7 +45,7 @@ function createNewRow(data){
         let text = document.createTextNode(data[key]);
         cell.append(text);
         row.append(cell);
-    })
+    });
     return row;
 }
 
