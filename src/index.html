@@ -8,7 +8,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div id="createActions">
+    <div id="createActions" class="hidden">
         <div id="canvasContainer"></div>
         <div id="menus" class="createMenu">
             <div id="actionLoggingMenu" class="create-action-container">
@@ -40,32 +40,18 @@
             </div>
         </div>
     </div>
-    <div id="listActions" class="hidden">
+    <div id="listActions" class="">
         <div class="tableContainer">
             <table class="purpleRed table">
                 <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Age</th>
-                        <th>Country</th>
+                        <th>Description</th>
+                        <th>Seconds</th>
+                        <th>Created At</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
-                        <td>Alice</td>
-                        <td>25</td>
-                        <td>USA</td>
-                    </tr>
-                    <tr>
-                        <td>Bob</td>
-                        <td>30</td>
-                        <td>Canada</td>
-                    </tr>
-                    <tr>
-                        <td>Charlie</td>
-                        <td>28</td>
-                        <td>UK</td>
-                    </tr>
+                <tbody id="actionListRows">
                 </tbody>
             </table>
         </div>

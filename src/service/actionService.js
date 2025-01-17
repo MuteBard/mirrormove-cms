@@ -1,4 +1,5 @@
 const axios = require("axios");
+const dayjs = require('dayjs')
 const { log } = require("../util/log");
 const jwt = require("jsonwebtoken");
 const secretKey = "Metagross";
@@ -55,7 +56,7 @@ function parseData(data) {
             return {
                 id: d.Id,
                 name: d.Name,
-                createdAt: d.CreatedAt,
+                createdAt: formatDate(d.CreatedAt),
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
@@ -67,10 +68,17 @@ function parseData(data) {
                 name: d.Name,
                 createdAt: d.CreatedAt,
                 isHidden: d.IsHidden,
+                description: d.Description,
+                seconds: d.Seconds,
                 steps: null,
             };
         }
     });
+}
+
+
+function formatDate(date) {    
+    return dayjs(date).format('MMMM D, YYYY h:mm A');
 }
 
 exports.searchActions = searchActions;

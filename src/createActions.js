@@ -409,5 +409,6 @@ function getTotalStepDuration(steps) {
 }
 
 function logger(data){
+    typeof data === object ? JSON.stringify(data) : data
     log(terminal, data)
 }
