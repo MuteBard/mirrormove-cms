@@ -2,17 +2,26 @@
 <html>
 <head>
     <title>MirrorMove</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Concert+One&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
     <div id="createActions">
         <div id="canvasContainer"></div>
-        <div id="menus">
+        <div id="menus" class="createMenu">
             <div id="actionLoggingMenu" class="create-action-container">
                 <div class="input-action-container">
                     <div class="requiredText"><h2>Action Name</h2><h2 class="required">*</h2></div>
                     <div class="search-container">
                         <input id="actionNameInput" type="text" class="search-input" placeholder="Add text">
+                    </div>
+                </div>
+                <div class="input-action-container">
+                    <div class="requiredText"><h2>Description</h2><h2 class="required">*</h2></div>
+                    <div class="search-container">
+                        <textarea id="actionDescriptionInput" rows="8" cols="60" placeholder="Add text" class="search-input"></textarea>
                     </div>
                 </div>
                 <div id="record-action-container" class="record-action-container inputToggled">
@@ -29,15 +38,43 @@
                     <button id="runAction" class="custom-button">Run</button>
                 </div>
             </div>
-            <div id="terminal"></div>
         </div>
     </div>
-    <div id="listActions"></div>
+    <div id="listActions" class="hidden">
+        <div class="tableContainer">
+            <table class="purpleRed table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Country</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Alice</td>
+                        <td>25</td>
+                        <td>USA</td>
+                    </tr>
+                    <tr>
+                        <td>Bob</td>
+                        <td>30</td>
+                        <td>Canada</td>
+                    </tr>
+                    <tr>
+                        <td>Charlie</td>
+                        <td>28</td>
+                        <td>UK</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div id="terminal"></div>
 </body>
 
-  
-<script src="./create.js"></script>
-
+<script src="./createActions.js"></script>
+<script src="./listActions.js"></script>
 
 <script>
  

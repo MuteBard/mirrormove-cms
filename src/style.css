@@ -1,27 +1,33 @@
 body {
 	background-color: transparent !important;
-	font-family: Roboto, sans-serif;
+	font-family: "Concert One", serif;
+	font-weight: 400;
+	font-style: normal;
+	letter-spacing: 2px;
 }
 
 
-
 canvas {
-	border: 5px dotted cyan; /* Add a border for visibility */
+	border: 5px dotted #3d3b63; /* Add a border for visibility */
 }
 
 .custom-button,
 .run-button,
 .cancel-button {
 	padding: 10px 20px;
-	background-color: #0092b3; /* Button color */
-	color: white; /* Text color */
+	background-color: #5a70cb; /* Button color */
+	color: #e7e7f1;
 	border: none;
 	border-radius: 5px; /* Rounded corners */
 	cursor: pointer;
 	font-size: 16px;
 	transition: background-color 0.3s, color 0.3s; /* Smooth transition effect */
-	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add shadow effect */
+	box-shadow: 0 8px 12px rgba(51, 44, 55, 0.1); /* Add shadow effect */
 	transform: translateY(1px); /* Move the button down slightly */
+	font-family: "Concert One", serif;
+	font-weight: 400;
+	font-style: normal;
+	letter-spacing: 2px;
 }
 
 .run-button  {
@@ -31,21 +37,21 @@ canvas {
 }
 
 .cancel-button  {
-	background-color: #ff2b2b;
+	background-color: #ff6262;
 	/* padding: 15px 25px;
 	font-size: 20px; */
 }
 
 .custom-button:hover {
-	background-color: #05ec5a; /* Hover color */
+	background-color: #413ab8;
 }
 
 .run-button:hover {
-	background-color: #91f51f; /* Hover color */
+	background-color: #413ab8
 }
 
 .cancel-button:hover  {
-	background-color: #ec7805; /* Hover color */
+	background-color: #d64d74;
 }
 
 .custom-button:active,
@@ -53,15 +59,11 @@ canvas {
 .cancel-button:active{
 	box-shadow: none; /* Remove shadow when button is clicked */
 	transform: translateY(2px); /* Further move the button down when clicked */
-	background-color: #0ba443;
+	background-color: #3a226d;
 }
 
 .cancel-button:active {
-	background-color: #009b39; /* Hover color */
-}
-
-.cancel-button:active {
-	background-color: #b30000; /* Hover color */
+	background-color: #ae284e;
 }
 
 .startHidden {
@@ -82,18 +84,18 @@ canvas {
 }
 .search-button {
 	padding: 8px 16px;
-	background-color: #007bff;
+	background-color: #a7adc6;
 	color: white;
 	border: none;
 	border-radius: 4px;
 	cursor: pointer;
 }
 
-
 .create-action-container {
 	display: flex;
 	flex-direction: column;
 	margin: 1em;
+	color: #3d3b63;
 }
 
 .record-action-container {
@@ -117,6 +119,36 @@ canvas {
 	flex-direction: column;
 }
 
+input, textarea{
+	border-radius: 10px;
+	background-color : #7b78af;
+	color: #e7e7f1;
+	font-family: "Concert One", serif;
+	font-weight: 400;
+	font-style: normal;
+	letter-spacing: 2px;
+}
+
+input, textarea{
+	border-radius: 10px;
+	background-color : #7b78af;
+	color: #e7e7f1;
+	font-family: "Concert One", serif;
+	font-weight: 400;
+	font-style: normal;
+	letter-spacing: 2px;
+	font-size: 20px;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #e7e7f1;
+	font-family: "Concert One", serif;
+	font-weight: 400;
+	font-style: normal;
+	letter-spacing: 2px;
+	font-size: 20px;
+}
+
 .run-action-container {
 	display: flex;
 	justify-content: left;
@@ -132,101 +164,58 @@ canvas {
 }
 .requiredText {
 	display: flex;
-	color: cyan
+	color: #55576b
 }
 
-/* ---------------------------------------------- */
-.menuContainer {
-	margin-top: 2em;
-	display: flex;
-	flex-direction: column;
-	flex-wrap: nowrap;
-	justify-content: space-between;
-	align-items: left;
-	height: 100%;
-}
-
-.menuContainer div {
-	width: 20em;
-	height: 30em;
-	margin-bottom: 2em;
-}
-
-/* Style the menu card */
-.menuCard {
-	display: flex;
-	flex-direction: column;
-	background-color: #f9f9f9;
-	padding: 10px;
-	border: 7px solid #abbfb5;
-	border-radius: 5px;
-	width: 5em;
-	color: rgb(50, 50, 50);
-	font-weight: bold;
-	font-size: 15px;
-	font-family: Arial;
-}
-
-/* Style the label for the dropdown */
-.dropdown label {
-	font-weight: bold;
-	color: rgb(50, 50, 50);
-	display: block;
-	margin-bottom: 5px;
-}
-
-/* Style the select dropdown itself */
-.dropdown select {
-	width: 100%;
-	padding: 5px;
-	border: 1px solid #ccc;
-	border-radius: 3px;
-	background-color: #fff;
-	font-size: 12px;
-	color: rgb(50, 50, 50);
-}
-
-.menuCardTitle {
-	color: rgb(50, 50, 50);
-	font-weight: bold;
-	font-size: 20px;
-	font-family: Arial;
-}
-
-.counters {
-	background-color:  rgb(50, 50, 50);
-	color: #ccc;
-	font-weight: bold;
-	font-size: 18px;
-	font-family: Arial;
-	padding: 10px 20px;
+.createMenu {
+	background-color: #d9d4e3;
+	margin: 1em 0;
+	padding-bottom: 1em;
 	border-radius: 3px;
 }
-.space {
-	margin-left: 1em;
+
+
+.hidden {
+    display: none;
 }
 
-/* Style for the input field */
-input[type="text"] {
-	padding: 10px;
-	width: 200px;
-	border: 2px solid #ccc;
-	border-radius: 5px;
-	font-size: 16px;
+
+
+.tableContainer {
+	background-color: #d9d4e3;
+	display:flex;
+	justify-content: center;
+	padding: 2em 0;
+	border-radius: 30px;
 }
 
-/* Style for the input field on focus */
-input[type="text"]:focus {
-	outline: none;
-	border-color: dodgerblue; /* Change border color on focus */
+.table {
+	color: #55576b;
+	border-collapse: collapse;
+	width: 50%;
+	font-size: 25px;
+	margin: 2em;
 }
 
-/* Style for the submit button */
-input[type="submit"] {
-	padding: 10px 15px;
-	background-color: dodgerblue;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
+th,
+td {
+	text-align: left;
+	padding: 1em;
+	border-bottom: 1px solid #292843;
 }
+
+th {
+	background-color: #f3646c;
+	font-weight:bolder;
+	padding: 1em;
+
+}
+
+tr {
+	background-color: #3d3b63;
+	color: #e7e7ef;
+}
+
+
+
+

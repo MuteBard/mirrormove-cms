@@ -1,5 +1,4 @@
 const { log, safeExec } = require("./util/log");
-const { makeFile } = require("./service/fileManager");
 const { searchActions, createAction, getAction, deleteAction } = require("./service/actionService");
 const { click, clickMove, keyPress } = require("./service/mirrorService");
 
@@ -65,20 +64,21 @@ window.addEventListener('keydown', function(event) {
     }
 });
 
-window.addEventListener('keydown', function(event) {
-    // Check if the pressed key is the spacebar (key code 32)
-    if (event.keyCode === 32) {
-        // Prevent the default behavior of scrolling down when the spacebar is pressed
-        event.preventDefault();
-    }
-});
-
 function listenToMovement() {
     
     log(terminal, true);
     log(terminal, 3);
     log(terminal, "abc");
     log(terminal, {a:2, b:3})
+
+    
+    window.addEventListener('keydown', function(event) {
+        // Check if the pressed key is the spacebar (key code 32)
+        if (event.keyCode === 32) {
+            // Prevent the default behavior of scrolling down when the spacebar is pressed
+            event.preventDefault();
+        }
+    });
 
     // Add mousedown event listener to start tracking mouse drag
     document.addEventListener('mousedown', function(event) {
@@ -179,19 +179,22 @@ function saveRecords() {
         const index = reversedCopy.findIndex((data) => data.action === "click");
         const filteredData = [...reversedCopy.slice(index + 1)].reverse();
         const steps = filteredData;
+        const seconds = getTotalStepDuration(steps)
 
         steps.push(actionEndCap())
 
-        const actionInput = document.getElementById('actionNameInput');
-        const actionName = actionInput.value;
+        const actionNameInput = document.getElementById('actionNameInput');
+        const name = actionNameInput.value;
+
+        const actionDescriptionInput = document.getElementById('actionDescriptionInput');
+        const description = actionDescriptionInput.value;
 
         const data = {
-            name: actionName,
-            steps 
+            name,
+            description,
+            seconds,
+            steps
         }
-
-        log(terminal, JSON.stringify(data))
-
         safeExec(terminal, async () => {
             // await searchActions(terminal, "test")
             await createAction(data);
@@ -206,6 +209,13 @@ function saveRecords() {
         setInitialState();
         log(terminal, "Logging canceled")
         log(terminal, isLogging)
+        
+        const actionNameInput = document.getElementById('actionNameInput');
+        actionNameInput.value = "";
+
+        const actionDescriptionInput = document.getElementById('actionDescriptionInput');
+        actionDescriptionInput.value = "";
+
         document.removeEventListener('mousedown');
         document.removeEventListener('mousemove');
         document.removeEventListener('mouseup');
@@ -219,6 +229,8 @@ function executeRecords(){
     const demoActionButton = document.getElementById("demoAction");
     const inputElement = document.getElementById('actionNameInput');
     const actionName = inputElement.value;
+
+    
 
     runActionButton.addEventListener("click", async () => {
         setInitialState();
@@ -382,4 +394,20 @@ function actionEndCap() {
         duration: 500
     }
     return data
+}
+
+function getTotalStepDuration(steps) {
+    return steps.reduce((sum, step, index, list) => {
+        const prev = list[index - 1]?.time
+        const curr = step.time;
+        if (!prev) return 0;
+        const diff = curr - prev
+        console.log(diff)
+        sum += diff;
+        return sum;
+    }, 0) / 1000
+}
+
+function logger(data){
+    log(terminal, data)
 }

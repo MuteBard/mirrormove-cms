@@ -41,7 +41,9 @@ function prepareBody(data) {
     const token = jwt.sign(payload, secretKey);
     return {
         name: data.name,
-        token,
+        description: data.description,
+        seconds: data.seconds,
+        token
     };
 }
 
@@ -55,6 +57,8 @@ function parseData(data) {
                 name: d.Name,
                 createdAt: d.CreatedAt,
                 isHidden: d.IsHidden,
+                description: d.Description,
+                seconds: d.Seconds,
                 steps,
             };
         } catch (err) {
