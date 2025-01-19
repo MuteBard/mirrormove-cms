@@ -6,8 +6,8 @@ const secretKey = "Metagross";
 
 const contentServiceHost = "http://localhost:8080";
 
-async function searchActions(name) {
-    const params = { name, sortOrder: "DESC", orderby: "NAME", isHidden: false };
+async function searchActions(searchPayload) {
+    const params = searchPayload;
     const response = await axios.get(`${contentServiceHost}/action/search`, {
         params,
     });

@@ -8,8 +8,13 @@ window.addEventListener('keydown', function(event) {
 
 
 const actionListRows = document.getElementById('actionListRows');
+const actionSearchSubmit = document.getElementById('actionSearchSubmit');
 
-getTableData("css")
+getTableData({
+    name: "css",
+    orderBy: "NAME"
+});
+listenForTable()
 
 
 document.getElementById('actionListRows').addEventListener('click', (event) => {
@@ -17,13 +22,31 @@ document.getElementById('actionListRows').addEventListener('click', (event) => {
 
     if (clickedRow) {
         const id = clickedRow.querySelector('.row-id').textContent;
-        logger(id)
     }
 });
 
-async function getTableData(searchTerm){
-    const data = await searchActions(searchTerm)
-   
+function listenForTable(){
+    actionSearchSubmit.addEventListener("click", () => { 
+
+        const actionSortOrderDropDown = document.getElementById('actionSortOrderDropDown');
+        const actionOrderByDropDown = document.getElementById('actionOrderByDropDown');
+        const actionSearchNameInput = document.getElementById('actionSearchNameInput');
+        const searchActionCheckbox = document.getElementById('searchActionCheckbox');
+        
+        const payload = {
+            name: actionSearchNameInput?.value,
+            orderBy: actionOrderByDropDown?.value?.toUpperCase(),
+            sortOrder: actionSortOrderDropDown?.value?.toUpperCase(),
+            isHidden: searchActionCheckbox?.checked
+        };
+        
+        getTableData(payload) 
+    });
+}
+
+async function getTableData(payload) {
+    actionListRows.innerHTML = '';
+    const data = await searchActions(payload)
     data.map((rowData) => {
         row = createNewRow(rowData)
         actionListRows.append(row)
@@ -39,7 +62,7 @@ function createNewRow(data){
     idCell.classList.add('row-id');
     row.append(idCell);
 
-    const orderedAllowedFields = ["name", "description", "seconds", "createdAt"]
+    const orderedAllowedFields = ["name", "createdAt", "seconds", "description"]
     orderedAllowedFields.forEach(key => {
         let cell = document.createElement('td');
         let text = document.createTextNode(data[key]);
