@@ -8,12 +8,6 @@
     <link rel="stylesheet" type="text/css" href="style.css">
 </head>
 <body>
-    <div id="sideBarContent" class="sideBarContent">
-        <div class="nav-button-container">
-            <button id="logAction" class="custom-button navButton">Action List View</button>
-            <button id="saveAction" class="custom-button navButton">Plan List View</button>
-        </div>
-    </div>
     <div id="mainContent" class="mainContent">
         <div id="createActions" class="hidden">
             <div id="canvasContainer"></div>
@@ -49,37 +43,41 @@
         </div>
         <div id="listActions" class="">
             <div class="tableContainer">
-                <div class="tableSearch">
-                    <div class="dropdown-container">
-                        <div class="dropdown">
-                            <select id="actionSortOrderDropDown" name="actionSortOrderDropDown" class="orderBy">
-                                <option value="DESC">Descending</option>
-                                <option value="ASC">Ascending</option>
-                            </select>
+                <div class="tableTopBar">
+                    <div class="tableSearch">
+                        <div class="dropdown-container">
+                            <div class="dropdown">
+                                <select id="actionSortOrderDropDown" name="actionSortOrderDropDown" class="orderBy">
+                                    <option value="DESC">Descending</option>
+                                    <option value="ASC">Ascending</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="dropdown-container">
-                        <div class="dropdown">
-                            <select id="actionOrderByDropDown" name="actionOrderByDropDown" class="orderBy">
-                                <option value="NAME">Name</option>
-                                <option value="CREATEDAT">CreatedAt</option>
-                                <option value="SECONDS">Seconds</option>
-                            </select>
+                        <div class="dropdown-container">
+                            <div class="dropdown">
+                                <select id="actionOrderByDropDown" name="actionOrderByDropDown" class="orderBy">
+                                    <option value="NAME">Name</option>
+                                    <option value="CREATEDAT">CreatedAt</option>
+                                    <option value="SECONDS">Seconds</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="search-container">
-                        <input id="actionSearchNameInput" type="text" class="search-input" placeholder="Add text">
+                        <div class="search-container">
+                            <input id="actionSearchNameInput" type="text" class="search-input" placeholder="Add text">
+                        </div>
+                        <div class="table-search-submit">
+                            <button id="actionSearchSubmit" class="custom-button tableButton">Search</button>
+                        </div>
+                        <div class="checkbox-container">
+                            <form>
+                                <input type="checkbox" id="searchActionCheckbox" name="searchActionCheckbox">
+                                <label for="searchActionCheckbox">Show Deleted</label>
+                            </form>
+                        </div>
                     </div>
                     <div class="table-search-submit">
-                        <button id="actionSearchSubmit" class="custom-button tableButton">Search</button>
+                        <button id="navActionCreate" class="custom-button tableButton">Create New Action</button>
                     </div>
-                    <div class="checkbox-container">
-                        <form>
-                            <input type="checkbox" id="searchActionCheckbox" name="searchActionCheckbox">
-                            <label for="searchActionCheckbox">Show Deleted</label>
-                        </form>
-                    </div>
-
                 </div>
                 <table class="purpleRed table">
                     <thead>
@@ -95,15 +93,22 @@
                 </table>
             </div>
         </div>
-        <div id="terminal"></div>
+        
     </div>
+    <div id="sideBarContent" class="sideBarContent">
+        <div class="nav-button-container">
+            <button id="navListMenu" class="custom-button navButton">Action List View</button>
+            <button id="navPlanMenu" class="custom-button navButton">Plan List View</button>
+        </div>
+    </div>
+    <div id="terminal"></div>
 
 </body>
 
 <script src="./createActions.js"></script>
 <script src="./listActions.js"></script>
-
+<script src="./shared.js"></script>
 <script>
  
 </script>
-</html>
+</html>cms test

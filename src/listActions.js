@@ -10,8 +10,24 @@ window.addEventListener('keydown', function(event) {
 const actionListRows = document.getElementById('actionListRows');
 const actionSearchSubmit = document.getElementById('actionSearchSubmit');
 
+
+const navActionCreate = document.getElementById("navActionCreate");
+const demoActionButton = document.getElementById("demoAction");
+const actionInput = document.getElementById('actionNameInput');
+const actionName = actionInput.value;
+
+
+
+navActionCreate.addEventListener("click", async () => {
+    const createActions = document.getElementById("createActions");
+    const listActions = document.getElementById("listActions")
+    setInitialState();
+    createActions.classList.remove('hidden');
+    listActions.classList.add('hidden');
+});
+
 getTableData({
-    name: "css",
+    name: "",
     orderBy: "NAME"
 });
 listenForTable()
