@@ -6,17 +6,24 @@ window.addEventListener('keydown', function(event) {
     }
 });
 
-
 const actionListRows = document.getElementById('actionListRows');
 const actionSearchSubmit = document.getElementById('actionSearchSubmit');
-
-
 const navActionCreate = document.getElementById("navActionCreate");
 const demoActionButton = document.getElementById("demoAction");
 const actionInput = document.getElementById('actionNameInput');
+
+const canvasContainerUpdate = document.getElementById("canvasContainerUpdate");
+const canvasUpdate = document.createElement("canvas");
+
+canvasUpdate.width = screenWidth - 50;
+canvasUpdate.height = screenHeight - 40;
+
+const ctxUpdate = canvasUpdate.getContext("2d");
+
 const actionName = actionInput.value;
 
 let actionToUpdate;
+canvasContainerUpdate.appendChild(canvasUpdate);
 
 
 navActionCreate.addEventListener("click", async () => {
@@ -33,8 +40,9 @@ getTableData({
     name: "",
     orderBy: "NAME"
 });
-listenForTable()
-updateRecords()
+listenForTable();
+updateRecords();
+executeRecordsUpdate()
 
 
 document.getElementById('actionListRows').addEventListener('click', async (event) => {
@@ -99,7 +107,6 @@ function updateRecords() {
         safeExec(terminal, async () => {
             await deleteAction(actionToUpdate[0]?.id);
         });
-        
     });
 }
 
@@ -154,4 +161,160 @@ function logger(data){
     typeof data === "object" ? JSON.stringify(data) : data
     log(terminal, data)
 }
+
+function executeRecordsUpdate(){
+    const runActionButton = document.getElementById("runActionUpdate");
+    const demoActionButton = document.getElementById("demoActionUpdate");
+    const updateName = actionToUpdate;
+
+    runActionButton.addEventListener("click", async () => {
+        setInitialState();
+        prepRunWindowUpdate();
+        const action = await searchActions(updateName);
+        const totalWait = triggerActionUpdate(action[0], "run", 2000)
+        pullUpWindowUpdate(totalWait, prepDemoWindowUpdate)
+    });
+
+    demoActionButton.addEventListener("click", async () => {
+        setInitialState();
+        prepDemoWindowUpdate();
+        const action = await searchActions(updateName);
+        logger(action)
+        triggerActionUpdate(action[0], "demo", 2000)
+    });
+}
+function triggerActionUpdate(action, executionType, milliOffset) {
+    let totalWait = milliOffset;
+    const timedSteps = action.steps.map((step, index, steps) => {
+        const {time, position, act} = getResponseUpdate(steps[index - 1], step, steps[index + 1])
+        totalWait += time;
+        return {
+            step,
+            wait: totalWait,
+            position,
+            act
+        }
+    })
+    timedSteps.map((ts) => {
+        setTimeout(async () => {
+            let position = ts?.position;
+            let action = ts?.step?.action;
+            let key = ts?.step?.key;
+
+            if (action === "key_press") {
+                if (executionType === "run"){
+                    await keyPress(key)
+                }
+                else if(executionType === "demo"){
+                    ctxUpdate.clearRect(0, 0, canvas.width, canvas.height);
+                    createBoxLetterUpdate(key)
+                }
+                log(terminal, ts?.step?.key);  
+            }
+            else if (action === "click" || action === "click_move" ){
+                if (executionType === "run"){
+                    await clickMove(position);
+                }
+                else if(executionType === "demo"){
+                    const {x, y, width, height} = createBoxLetterUpdate("");
+                    ctxUpdate.clearRect(x, y, width, height);
+                    drawLineUpdate(position);
+                }
+                log(terminal, position)
+            }
+            
+        }, ts.wait)
+    })
+
+
+    return totalWait;
+}
+function pullUpWindowUpdate(wait, desiredWindow) {
+    setTimeout(() => {
+        desiredWindow();
+    }, wait)
+}
+
+async function prepRunWindowUpdate() {
+    window.scrollTo({
+        top: 0
+    });
+	if (typeof nw !== "undefined" && nw.App) {
+		const win = nw.Window.get();
+        win.minimize();
+        click({x: screenWidth /2, y: screenHeight/2});
+	}
+}
+
+async function prepDemoWindowUpdate() {
+    window.scrollTo({
+        top: 0
+    });
+	if (typeof nw !== "undefined" && nw.App) {
+		const win = nw.Window.get();
+        win.enterFullscreen();
+        click({x: screenWidth /2, y: screenHeight/2});
+	}
+}
+
+function getResponseUpdate(prevStep, currStep, nextStep) {
+    let currTime = currStep.time
+    let prevTime = !prevStep ? currTime : prevStep.time
+
+    let currPos = { x: currStep.x, y: currStep.y }
+    let nextPos = !nextStep ? currPos : { x: nextStep.x, y: nextStep.y }
+
+    let duration = currStep?.duration || 0;
+    let time = currTime - prevTime + (duration + 700);
+    let position = {x1 : currPos.x, y1: currPos.y, x2: nextPos.x, y2: nextPos.y, }
+
+    let prevAction = !prevStep ? null : prevStep.action;
+    let nextAction = !nextStep ? null : nextStep.action;
+
+    return { 
+        time, 
+        position, 
+        act: {
+            prev: prevAction,
+            next: nextAction
+        }
+    }
+}
+
+function drawLineUpdate(position){
+    ctxUpdate.strokeStyle = 'red';
+    ctxUpdate.lineWidth = 2; 
+    ctxUpdate.beginPath();
+    ctxUpdate.moveTo(position.x1, position.y1); 
+    ctxUpdate.lineTo(position.x2, position.y2);
+    ctxUpdate.stroke();
+}
+
+function createBoxLetterUpdate(letter) {
+	const width = 50;
+	const height = 50;
+
+    const x = Number(screenWidth * 0.425);
+	const y = Number(screenHeight * .4);
+    const mx = x + 17;
+    const my = y + 33;
+
+    //fill box color
+    ctxUpdate.fillStyle = "#454b60";
+	ctxUpdate.fillRect(x, y, width, height);
+
+	//write letter
+	ctxUpdate.fillStyle = "#d9c9ce";
+	ctxUpdate.font = "bold 30px Roboto, sans-serif";
+	ctxUpdate.fillText(`${letter}`, mx, my);
+
+	return {
+		letter,
+		x,
+		y,
+		width,
+		height
+	};
+}
+
 

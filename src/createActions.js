@@ -196,10 +196,7 @@ function saveRecords() {
             steps
         }
         safeExec(terminal, async () => {
-            // await searchActions(terminal, "test")
             await createAction(data);
-            // await getAction(terminal, 9)
-            // await deleteAction(terminal, 7)
         })
         const containersToShow = document.querySelectorAll('.saveToggled');
         containersToShow.forEach(container => container.style.display = 'flex');

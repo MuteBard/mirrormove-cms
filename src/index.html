@@ -93,32 +93,35 @@
                 </table>
             </div>
         </div>
-        <div id="updateActions" class="hidden updateMenu">
-            <div id="actionLoggingMenuUpdate" class="create-action-container">
-                <div class="input-action-container">
-                    <div class="requiredText"><h2>Action Name</h2><h2 class="required">*</h2></div>
-                    <div class="search-container">
-                        <input id="actionNameInputUpdate" type="text" class="search-input" placeholder="Add text">
+        <div id="updateActions" class="hidden">
+            <div id="canvasContainerUpdate"></div>
+            <div id="menusUpdate" class="updateMenu">
+                <div id="actionLoggingMenuUpdate" class="create-action-container">
+                    <div class="input-action-container">
+                        <div class="requiredText"><h2>Action Name</h2><h2 class="required">*</h2></div>
+                        <div class="search-container">
+                            <input id="actionNameInputUpdate" type="text" class="search-input" placeholder="Add text">
+                        </div>
                     </div>
-                </div>
-                <div class="input-action-container">
-                    <div class="requiredText"><h2>Description</h2><h2 class="required">*</h2></div>
-                    <div class="search-container">
-                        <textarea id="actionDescriptionInputUpdate" rows="8" cols="60" placeholder="Add text" class="search-input"></textarea>
+                    <div class="input-action-container">
+                        <div class="requiredText"><h2>Description</h2><h2 class="required">*</h2></div>
+                        <div class="search-container">
+                            <textarea id="actionDescriptionInputUpdate" rows="8" cols="60" placeholder="Add text" class="search-input"></textarea>
+                        </div>
                     </div>
-                </div>
-                <div id="record-action-container-update" class="record-action-container inputToggled">
-                    <!-- <div class="log-action-button-container">
-                        <button id="logAction" class="custom-button">Start Recording</button>
-                    </div> -->
-                    <div class="save-action-container">
-                        <button id="deleteActionUpdate" class="custom-button">Delete</button>
-                        <button id="saveActionUpdate" class="custom-button">Save</button>
+                    <div id="record-action-container-update" class="record-action-container inputToggled">
+                        <!-- <div class="log-action-button-container">
+                            <button id="logAction" class="custom-button">Start Recording</button>
+                        </div> -->
+                        <div class="save-action-container">
+                            <button id="deleteActionUpdate" class="custom-button">Delete</button>
+                            <button id="saveActionUpdate" class="custom-button">Save</button>
+                        </div>
                     </div>
-                </div>
-                <div id="run-action-container-update" class="run-action-container saveToggled">
-                    <button id="demoActionUpdate" class="custom-button">Test Run</button>
-                    <button id="runActionUpdate" class="custom-button">Run</button>
+                    <div id="run-action-container-update" class="run-action-container saveToggled">
+                        <button id="demoActionUpdate" class="custom-button">Test Run</button>
+                        <button id="runActionUpdate" class="custom-button">Run</button>
+                    </div>
                 </div>
             </div>
         </div>
