@@ -16,14 +16,17 @@ const demoActionButton = document.getElementById("demoAction");
 const actionInput = document.getElementById('actionNameInput');
 const actionName = actionInput.value;
 
+let actionToUpdate;
 
 
 navActionCreate.addEventListener("click", async () => {
     const createActions = document.getElementById("createActions");
-    const listActions = document.getElementById("listActions")
+    const listActions = document.getElementById("listActions");
+    const updateActions = document.getElementById("updateActions");
     setInitialState();
     createActions.classList.remove('hidden');
     listActions.classList.add('hidden');
+    updateActions.classList.add('hidden');
 });
 
 getTableData({
@@ -31,15 +34,74 @@ getTableData({
     orderBy: "NAME"
 });
 listenForTable()
+updateRecords()
 
 
-document.getElementById('actionListRows').addEventListener('click', (event) => {
-    const clickedRow = event.target.closest('tr'); // Find the closest 'tr' element
+document.getElementById('actionListRows').addEventListener('click', async (event) => {
+    const clickedRow = event.target.closest('tr'); 
+    const createActions = document.getElementById("createActions");
+    const listActions = document.getElementById("listActions");
+    const updateActions = document.getElementById("updateActions");
 
     if (clickedRow) {
         const id = clickedRow.querySelector('.row-id').textContent;
+        setInitialState();
+        createActions.classList.add('hidden');
+        listActions.classList.add('hidden');
+        updateActions.classList.remove('hidden');
+
+        const actionGetData = await getAction(id);
+        const actionNameInputUpdate = document.getElementById("actionNameInputUpdate");
+        const actionDescriptionInputUpdate = document.getElementById("actionDescriptionInputUpdate");
+
+        actionNameInputUpdate.value = actionGetData[0].name;
+        actionDescriptionInputUpdate.value = actionGetData[0].description;
+        actionToUpdate = actionGetData;
     }
 });
+
+function updateRecords() {
+    const saveActionButton = document.getElementById("saveActionUpdate");
+    const deleteActionButton = document.getElementById("deleteActionUpdate");
+    const createActions = document.getElementById("createActions");
+    const listActions = document.getElementById("listActions");
+    const updateActions = document.getElementById("updateActions");
+
+    saveActionButton.addEventListener("click", () => {
+        createActions.classList.add('hidden');
+        listActions.classList.remove('hidden');
+        updateActions.classList.add('hidden');
+        const actionNameInput = document.getElementById('actionNameInputUpdate');
+        const name = actionNameInput.value;
+
+        const actionDescriptionInput = document.getElementById('actionDescriptionInputUpdate');
+        const description = actionDescriptionInput.value;
+
+        const data = {
+            ...actionToUpdate[0],
+            name,
+            description
+        }
+
+        safeExec(terminal, async () => {
+            await updateAction(data);
+        });
+    });
+
+    deleteActionButton.addEventListener("click", () => {
+        createActions.classList.add('hidden');
+        listActions.classList.remove('hidden');
+        updateActions.classList.add('hidden');
+
+        logger("delteing")
+        logger(actionToUpdate[0])
+
+        safeExec(terminal, async () => {
+            await deleteAction(actionToUpdate[0]?.id);
+        });
+        
+    });
+}
 
 function listenForTable(){
     actionSearchSubmit.addEventListener("click", () => { 

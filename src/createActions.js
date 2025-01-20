@@ -1,5 +1,5 @@
 const { log, safeExec } = require("./util/log");
-const { searchActions, createAction, getAction, deleteAction } = require("./service/actionService");
+const { searchActions, createAction, getAction, deleteAction, updateAction } = require("./service/actionService");
 const { click, clickMove, keyPress } = require("./service/mirrorService");
 
 

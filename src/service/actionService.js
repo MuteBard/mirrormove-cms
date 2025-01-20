@@ -22,6 +22,13 @@ async function createAction(data) {
     return result;
 }
 
+async function updateAction(data) {
+    const body = prepareBody(data);
+    const response = await axios.patch(`${contentServiceHost}/action`, body);
+    const result = parseData(response.data);
+    return result;
+}
+
 async function getAction(id) {
     const response = await axios.get(`${contentServiceHost}/action/${id}`);
     const result = parseData(response.data);
@@ -41,6 +48,7 @@ function prepareBody(data) {
 
     const token = jwt.sign(payload, secretKey);
     return {
+        id: data?.id || undefined,
         name: data.name,
         description: data.description,
         seconds: data.seconds,
@@ -85,3 +93,4 @@ exports.searchActions = searchActions;
 exports.createAction = createAction;
 exports.getAction = getAction;
 exports.deleteAction = deleteAction;
+exports.updateAction = updateAction;

@@ -202,10 +202,14 @@ input::placeholder, textarea::placeholder {
 	color: #55576b
 }
 
-.createMenu {
+.createMenu, .updateMenu {
 	background-color: #d9d4e3;
 	margin:  1em 0 0 0;
 	padding-bottom: 1em;
+}
+
+.updateMenu {
+   height: 100vh;
 }
 
 
