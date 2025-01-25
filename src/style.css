@@ -202,6 +202,13 @@ input::placeholder, textarea::placeholder {
 	font-size: 20px;
 }
 
+.mini-input{
+    width: 1em; 
+    padding: .35em 2em;
+	margin: 0 .5em;
+	border: 0.1em solid #7b78af;
+}
+
 .run-action-container {
 	display: flex;
 	justify-content: left;
@@ -294,6 +301,10 @@ th {
 	background-color: #46b39a;
 }
 
+.selectionTable th {
+	background-color: #5e0dec;
+}
+
 .radtl {
 	border-top-left-radius: 15px;
 }
@@ -364,4 +375,9 @@ input[type=checkbox] + label {
 	transform: scale(1);
 	background-color: #bfb;
 	border-color: #bfb;
+  }
+
+  .loopCounter{
+	display: flex;
+	
   }
