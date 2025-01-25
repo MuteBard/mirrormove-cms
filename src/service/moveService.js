@@ -51,8 +51,6 @@ function prepareBody(data) {
     };
 }
 
-
-
 function parseActionData(data) {
     return data.map((d) => {
         const { Token } = d;
@@ -98,7 +96,7 @@ function parseData(data) {
                 id: d.Id,
                 name: d.Name,
                 createdAt: formatDate(d.CreatedAt),
-                updateAt: formatDate(d.UpdatedAt),
+                updatedAt: formatDate(d.UpdatedAt),
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
@@ -110,7 +108,7 @@ function parseData(data) {
                 id: d.Id,
                 name: d.Name,
                 createdAt: formatDate(d.CreatedAt),
-                updateAt: formatDate(d.UpdatedAt),
+                updatedAt: formatDate(d.UpdatedAt),
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
@@ -124,10 +122,10 @@ function formatDate(date) {
     return dayjs(date).format('ddd, MM-DD-YYYY h:mm A');
 }
 
-(async() => {
-    const x = await getMove(9);
-    console.log(x);
-})()
+// (async() => {
+//     const x = await getMove(9);
+//     console.log(x);
+// })()
 
 exports.searchMoves = searchMoves;
 exports.createMove = createMove;

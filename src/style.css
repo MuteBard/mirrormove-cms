@@ -126,14 +126,14 @@ canvas {
 	cursor: pointer;
 }
 
-.create-action-container {
+.create-action-container, create-move-container{
 	display: flex;
 	flex-direction: column;
 	margin: 1em;
 	color: #3d3b63;
 }
 
-.record-action-container {
+.record-action-container, record-move-container{
 	display: flex;
 	justify-content: space-between;
 	margin-top: 2em;
@@ -148,7 +148,7 @@ canvas {
     margin-left: 2em;
 }
 
-.input-action-container {
+.input-action-container, input-move-container {
 	display: flex;
 	margin-top: 1em;
 	flex-direction: column;
@@ -259,10 +259,21 @@ td {
 	border-bottom: 1px solid #292843;
 }
 
+
+
+
 th {
 	background-color: #f3646c;
 	font-weight:bolder;
 	padding: 1em;
+}
+
+.actionTable th {
+	background-color: #f3646c;
+}
+
+.moveTable th {
+	background-color: #46b39a;
 }
 
 .radtl {

@@ -147,7 +147,7 @@ function createNewRow(data){
     idCell.classList.add('row-id');
     row.append(idCell);
 
-    const orderedAllowedFields = ["name", "createdAt", "seconds", "description"]
+    const orderedAllowedFields = ["name", "updatedAt", "seconds", "description"]
     orderedAllowedFields.forEach(key => {
         let cell = document.createElement('td');
         let text = document.createTextNode(data[key]);

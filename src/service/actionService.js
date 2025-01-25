@@ -61,11 +61,12 @@ function parseData(data) {
         const { Token } = d;
         try {
             const { steps } = jwt.verify(Token, secretKey);
+
             return {
                 id: d.Id,
                 name: d.Name,
                 createdAt: formatDate(d.CreatedAt),
-                updateAt: formatDate(d.UpdatedAt),
+                updatedAt: formatDate(d.UpdatedAt),
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
