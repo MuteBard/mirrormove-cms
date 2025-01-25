@@ -46,7 +46,7 @@ function prepareBody(data) {
         steps: data.steps,
     };
 
-    const token = jwt.sign(payload, secretKey);
+    const Token = jwt.sign(payload, secretKey);
     return {
         Id: data?.id || undefined,
         Name: data.name,

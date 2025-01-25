@@ -58,7 +58,6 @@ function parseActionData(data) {
         const { Token } = d;
         try {
             const { steps } = jwt.verify(Token, secretKey);
-            console.log(steps)
             return {
                 id: d.Id,
                 name: d.Name,
@@ -67,7 +66,7 @@ function parseActionData(data) {
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
-                actionLoops,
+                steps
             };
         } catch (err) {
             console.log(err)
@@ -120,6 +119,15 @@ function parseData(data) {
         }
     });
 }
+
+function formatDate(date) {    
+    return dayjs(date).format('ddd, MM-DD-YYYY h:mm A');
+}
+
+(async() => {
+    const x = await getMove(9);
+    console.log(x);
+})()
 
 exports.searchMoves = searchMoves;
 exports.createMove = createMove;
