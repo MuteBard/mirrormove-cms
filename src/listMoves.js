@@ -101,7 +101,6 @@ getMoveTableData({
 //         listMoves.classList.remove('hidden');
 //         updateMoves.classList.add('hidden');
 
-//         logger("delteing")
 //         logger(actionToUpdate[0])
 
 //         safeExec(terminal, async () => {
@@ -140,7 +139,6 @@ async function getMoveTableData(payload) {
 
 function createNewMoveRow(data){
     let row = document.createElement('tr');
-    logger(data)
     // let idCell = document.createElement('td');
     // idCell.style.display = 'none';
     // idCell.textContent = data.id;

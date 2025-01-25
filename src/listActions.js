@@ -101,7 +101,6 @@ function updateRecords() {
         listActions.classList.remove('hidden');
         updateActions.classList.add('hidden');
 
-        logger("delteing")
         logger(actionToUpdate[0])
 
         safeExec(terminal, async () => {

@@ -2,7 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+	/* border: green 2px solid; */
 }
+
+
 
 body {
 	background-color: transparent !important;
@@ -133,6 +136,17 @@ canvas {
 	color: #3d3b63;
 }
 
+.create-move-container {
+	justify-content: center;
+	align-items: cener;
+}
+
+.createMovetextInput {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: cener;
+}
 .record-action-container, record-move-container{
 	display: flex;
 	justify-content: space-between;
@@ -152,6 +166,10 @@ canvas {
 	display: flex;
 	margin-top: 1em;
 	flex-direction: column;
+}
+
+.input-move-container {
+	margin: 1em;
 }
 
 input, textarea{
@@ -220,7 +238,7 @@ input::placeholder, textarea::placeholder {
 
 .tableSearch {
 	display: flex;
-	margin-left: 1em;
+	align-items: end;
 }
 
 .tableSearch > * {
