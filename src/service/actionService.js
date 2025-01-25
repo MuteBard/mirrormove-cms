@@ -48,11 +48,11 @@ function prepareBody(data) {
 
     const token = jwt.sign(payload, secretKey);
     return {
-        id: data?.id || undefined,
-        name: data.name,
-        description: data.description,
-        seconds: data.seconds,
-        token
+        Id: data?.id || undefined,
+        Name: data.name,
+        Description: data.description,
+        Seconds: data.seconds,
+        Token
     };
 }
 
@@ -65,16 +65,19 @@ function parseData(data) {
                 id: d.Id,
                 name: d.Name,
                 createdAt: formatDate(d.CreatedAt),
+                updateAt: formatDate(d.UpdatedAt),
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
                 steps,
             };
         } catch (err) {
+            console.log(err)
             return {
                 id: d.Id,
                 name: d.Name,
                 createdAt: d.CreatedAt,
+                updatedAt: d.UpdatedAt,
                 isHidden: d.IsHidden,
                 description: d.Description,
                 seconds: d.Seconds,
