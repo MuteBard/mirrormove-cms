@@ -61,6 +61,7 @@ document.getElementById('MoveSave').addEventListener('click', async () => {
         move.actionLoops.push(actionLoop);
     })
     await createMove(move)
+    selectTable.innerHTML = "";
 })
 
 async function getMoveCreateTableData(payload) {

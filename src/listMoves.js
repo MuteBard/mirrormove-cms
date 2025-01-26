@@ -7,7 +7,7 @@
 // });
 
 const moveListRows = document.getElementById('moveListRows');
-// const moveSearchSubmit = document.getElementById('moveSearchSubmit');
+const moveSearchSubmit = document.getElementById('moveSearchSubmit');
 // const navMoveCreate = document.getElementById("navMoveCreate");
 // const demoMoveButton = document.getElementById("demoMove");
 // const actionInput = document.getElementById('actionNameInput');
@@ -40,7 +40,7 @@ getMoveTableData({
     name: "",
     orderBy: "NAME"
 });
-// listenForMoveTable();
+listenForMoveTable();
 // updateRecords();
 // executeRecordsUpdate()
 
@@ -109,24 +109,26 @@ getMoveTableData({
 //     });
 // }
 
-// function listenForMoveTable(){
-//     actionSearchSubmit.addEventListener("click", () => { 
+function listenForMoveTable(){
+    moveSearchSubmit.addEventListener("click", () => { 
 
-//         const actionSortOrderDropDown = document.getElementById('actionSortOrderDropDown');
-//         const actionOrderByDropDown = document.getElementById('actionOrderByDropDown');
-//         const actionSearchNameInput = document.getElementById('actionSearchNameInput');
-//         const searchMoveCheckbox = document.getElementById('searchMoveCheckbox');
+        const moveSortOrderDropDown = document.getElementById('moveSortOrderDropDown');
+        const moveOrderByDropDown = document.getElementById('moveOrderByDropDown');
+        const movenSearchNameInput = document.getElementById('moveSearchNameInput');
+        const searchMoveCheckbox = document.getElementById('searchMoveCheckbox');
         
-//         const payload = {
-//             name: actionSearchNameInput?.value,
-//             orderBy: actionOrderByDropDown?.value?.toUpperCase(),
-//             sortOrder: actionSortOrderDropDown?.value?.toUpperCase(),
-//             isHidden: searchMoveCheckbox?.checked
-//         };
+        const payload = {
+            name: movenSearchNameInput?.value,
+            orderBy: moveOrderByDropDown?.value?.toUpperCase(),
+            sortOrder: moveSortOrderDropDown?.value, 
+            isHidden: searchMoveCheckbox?.checked
+        };
+
+        console.log(payload)
         
-//         getMoveTableData(payload) 
-//     });
-// }
+        getMoveTableData(payload) 
+    });
+}
 
 async function getMoveTableData(payload) {
     moveListRows.innerHTML = '';
