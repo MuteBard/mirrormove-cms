@@ -230,7 +230,8 @@ input::placeholder, textarea::placeholder {
 
 .createMenu, .updateMenu {
 	background-color: #d9d4e3;
-	margin:  1em 0 0 0;
+	margin:  1em 0 0 0; 
+	/* Deletes the above CSS */
 	padding-bottom: 1em;
 }
 
@@ -251,13 +252,24 @@ input::placeholder, textarea::placeholder {
 
 .tableSearch > * {
 	margin-right: 10px; 
-  }
+}
 
+
+.selectTableButtons {
+	display: flex;
+	justify-content: end;
+	align-items: end;
+	width: 72%
+}
+
+.selectTableButtons > * {
+	margin-right: 2em; 
+}
 
 .tableTopBar {
 	display: flex;
 	justify-content: space-between;
-	width: 72%
+	width: 72%;
 }
 
 .tableContainer {
@@ -269,13 +281,22 @@ input::placeholder, textarea::placeholder {
 	height: 90vh;
 }
 
+.shortScrollableTable {
+	display: flex;
+	flex-direction: column; /* Ensure flex items stack vertically */
+	max-height: 20em; /* Set the maximum height before scrolling starts */
+	overflow: auto; /* Enable scrolling when content exceeds the max-height */
+	width: 75%;
+  }
+
+
+
 .table {
 	color: #55576b;
 	border-collapse: collapse;
 	width: 75%;
 	font-size: 25px;
 	margin: 2em;
-	height: 30vh;
 }
 
 th,
@@ -382,3 +403,22 @@ input[type=checkbox] + label {
 	display: flex;
 	
   }
+
+/* Works in WebKit based browsers (Chrome, Safari) */
+.element::-webkit-scrollbar {
+	width: 24px;
+}
+  
+.element::-webkit-scrollbar-thumb {
+background-color: #3d3b63;
+}
+
+.element::-webkit-scrollbar-track {
+background-color: #7b78af;
+}
+
+/* Works in Firefox */
+.element {
+scrollbar-width:none;
+scrollbar-color: #3d3b63 #7b78af;
+}
