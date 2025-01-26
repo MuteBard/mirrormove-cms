@@ -203,10 +203,11 @@ input::placeholder, textarea::placeholder {
 }
 
 .mini-input{
-    width: 1em; 
+	width: 300px; 
     padding: .35em 2em;
 	margin: 0 .5em;
 	border: 0.1em solid #7b78af;
+	text-align: center;
 }
 
 .run-action-container {

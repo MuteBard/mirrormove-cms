@@ -9,6 +9,7 @@ getMoveCreateTableData({
     orderBy: "NAME"
 });
 listenMoveCreateForTable()
+let count = 1;
 
 
 document.getElementById('moveCreateActionListRows').addEventListener('click', async (event) => {
@@ -23,17 +24,6 @@ document.getElementById('moveCreateActionListRows').addEventListener('click', as
 });
 
 
-
-document.getElementById('selectedListRows').addEventListener('click', async (event) => {
-    const clickedRow = event.target.closest('tr'); 
-
-    if (clickedRow) {
-        const id = clickedRow.querySelector('.row-id').textContent;
-        const actionGetData = await getAction(id);
-
-        addToSelectTableData(actionGetData)
-    }
-});
 
 async function getMoveCreateTableData(payload) {
     moveCreateActionListRows.innerHTML = '';
@@ -61,12 +51,9 @@ function listenMoveCreateForTable(){
     });
 }
 
-
-
 async function addToSelectTableData(data) {
     const action = data[0];
     
-
     let row = document.createElement('tr');
     let idCell = document.createElement('td');
     idCell.style.display = 'none';
@@ -94,7 +81,7 @@ async function addToSelectTableData(data) {
             row.append(cell);
         }
         else if (key === "loops") {
-            let loopDiv = createLoopDiv();
+            let loopDiv = createLoopDiv(count);
             cell.append(loopDiv)
             row.append(cell)
         }
@@ -102,11 +89,16 @@ async function addToSelectTableData(data) {
            let buttonRemove = document.createElement('button');
             buttonRemove.textContent = 'Delete';
             buttonRemove.className = 'custom-button tableButton';
+            buttonRemove.addEventListener('click', () => {
+                const rowToRemove = buttonRemove.closest('tr');
+                rowToRemove.remove();
+            });
             cell.append(buttonRemove)
             row.append(cell)
         }
     });
 
+    count++;
     selectedListRows.append(row);
 }
 
@@ -130,34 +122,45 @@ function createMoveCreateNewRow(data){
     return row;
 }
 
-
-function createLoopDiv() {
+function createLoopDiv(id) {
     // Create a div element
     const divElement = document.createElement('div');
 
     // Create a button element for increasing value
     const buttonIncrease = document.createElement('button');
     buttonIncrease.textContent = '+';
-    // buttonIncrease.id = 'loopInputIncrease';
+    buttonIncrease.id = `loopInputIncrease-${id}`;
     buttonIncrease.className = 'custom-button tableButton';
 
     // Create an input element
-    const inputElement = document.createElement('input');
-    inputElement.type = 'text';
-    // inputElement.id = 'loopValue';
-    inputElement.className = 'search-input mini-input';
-    inputElement.placeholder = "0";
+    const loopElement = document.createElement('input');
+    loopElement.type = 'text';
+    loopElement.id = `loopValue-${id}`;
+    loopElement.className = 'search-input mini-input';
+    loopElement.placeholder = 0;
 
     // Create a button element for decreasing value
     const buttonDecrease = document.createElement('button');
     buttonDecrease.textContent = '-';
-    // buttonDecrease.id = 'loopInputDecrease';
+    buttonDecrease.id = `loopInputDecrease-${id}`;
     buttonDecrease.className = 'custom-button tableButton';
 
     // Append the elements to the div
     divElement.appendChild(buttonIncrease);
-    divElement.appendChild(inputElement);
+    divElement.appendChild(loopElement);
     divElement.appendChild(buttonDecrease);
+
+    // Increase and decrease functionality
+    let counter = 0;
+    buttonIncrease.addEventListener('click', () => {
+        counter++;
+        loopElement.value = counter;
+    });
+
+    buttonDecrease.addEventListener('click', () => {
+        counter--;
+        loopElement.value = counter;
+    });
 
     return divElement;
 }

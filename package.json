@@ -16,10 +16,10 @@
     "@nut-tree-fork/nut-js": "^4.2.4",
     "dayjs": "^1.11.13",
     "fs-extra": "^11.2.0",
-    "jsonwebtoken": "^9.0.2",
-    "nw": "^0.90.0-sdk"
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
+    "nw": "^0.94.1-1-sdk",
     "nw-builder": "^4.8.0"
   }
 }
