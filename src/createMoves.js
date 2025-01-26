@@ -26,21 +26,22 @@ document.getElementById('moveCreateActionListRows').addEventListener('click', as
 document.getElementById('MoveSave').addEventListener('click', async () => {
     console.log("SAVED")
 
-    
     const moveName = document.getElementById('moveCreateActionNameInput')?.value;
     const moveDescription = document.getElementById('moveCreateActionDescriptionInput')?.value;
     const move = {
         name: moveName,
         description: moveDescription,
+        seconds: 0,
         actionLoops: []
     };
 
     const selectTable = document.getElementById('selectedListRows');
     const trList = Array.from(selectTable.getElementsByTagName('tr'));
-    trList.forEach((tr) => {
+    trList.forEach((tr, index) => {
         
         const actionLoop = {};
         const tdElemList = tr.getElementsByTagName('td');
+        const savedLoops = Number(document.getElementById(`loopValue-${index + 1}`)?.value || 1)
         
         const tdList = Array.from(tdElemList)
         tdList.forEach((td) => {
@@ -49,19 +50,18 @@ document.getElementById('MoveSave').addEventListener('click', async () => {
                 actionLoop['ActionId'] = Number(td.innerText);
             }
             
-            if (td.className === 'loops') {
-                loopInput = td.getElementsByTagName('input')[0]
-                loops = loopInput?.value <= 0 ? 1 : Number(loopInput?.value);
-                actionLoop['Loops'] = loops;
+            if (td.className === 'loops') {  
+                actionLoop['Loops'] = savedLoops;
+            }
+
+            if (td.className === 'seconds') {
+                move.seconds += Number(td.innerText) * savedLoops;
             }
         })
         move.actionLoops.push(actionLoop);
     })
     await createMove(move)
-
 })
-
-
 
 async function getMoveCreateTableData(payload) {
     moveCreateActionListRows.innerHTML = '';
@@ -190,7 +190,7 @@ function createLoopDiv(id) {
     loopElement.type = 'text';
     loopElement.id = `loopValue-${id}`;
     loopElement.className = 'search-input mini-input';
-    loopElement.placeholder = 0;
+    loopElement.placeholder = 1;
 
     // Create a button element for decreasing value
     const buttonDecrease = document.createElement('button');
@@ -204,7 +204,7 @@ function createLoopDiv(id) {
     divElement.appendChild(buttonDecrease);
 
     // Increase and decrease functionality
-    let counter = 0;
+    let counter = 1;
     buttonIncrease.addEventListener('click', () => {
         counter++;
         loopElement.value = counter;

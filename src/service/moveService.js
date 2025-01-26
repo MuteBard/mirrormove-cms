@@ -122,7 +122,6 @@ function formatDate(date) {
     return dayjs(date).format('ddd, MM-DD-YYYY h:mm A');
 }
 
-
 exports.searchMoves = searchMoves;
 exports.createMove = createMove;
 exports.getMove = getMove;
