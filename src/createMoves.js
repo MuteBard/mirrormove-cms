@@ -16,12 +16,50 @@ document.getElementById('moveCreateActionListRows').addEventListener('click', as
     const clickedRow = event.target.closest('tr'); 
 
     if (clickedRow) {
-        const id = clickedRow.querySelector('.row-id').textContent;
+        const id = clickedRow.querySelector('.id').textContent;
         const actionGetData = await getAction(id);
 
         addToSelectTableData(actionGetData)
     }
 });
+
+document.getElementById('MoveSave').addEventListener('click', async () => {
+    console.log("SAVED")
+
+    
+    const moveName = document.getElementById('moveCreateActionNameInput')?.value;
+    const moveDescription = document.getElementById('moveCreateActionDescriptionInput')?.value;
+    const move = {
+        name: moveName,
+        description: moveDescription,
+        actionLoops: []
+    };
+
+    const selectTable = document.getElementById('selectedListRows');
+    const trList = Array.from(selectTable.getElementsByTagName('tr'));
+    trList.forEach((tr) => {
+        
+        const actionLoop = {};
+        const tdElemList = tr.getElementsByTagName('td');
+        
+        const tdList = Array.from(tdElemList)
+        tdList.forEach((td) => {
+
+            if (td.className === 'id') {
+                actionLoop['ActionId'] = Number(td.innerText);
+            }
+            
+            if (td.className === 'loops') {
+                loopInput = td.getElementsByTagName('input')[0]
+                loops = loopInput?.value <= 0 ? 1 : Number(loopInput?.value);
+                actionLoop['Loops'] = loops;
+            }
+        })
+        move.actionLoops.push(actionLoop);
+    })
+    await createMove(move)
+
+})
 
 
 
@@ -53,49 +91,64 @@ function listenMoveCreateForTable(){
 
 async function addToSelectTableData(data) {
     const action = data[0];
+
+    const {id, ...rest} = action
     
     let row = document.createElement('tr');
     let idCell = document.createElement('td');
     idCell.style.display = 'none';
-    idCell.textContent = data.id;
-    idCell.classList.add('row-id');
+    idCell.textContent = id;
+    idCell.classList.add('id');
     row.append(idCell);
 
 
     const augmentedData = {
-        ...action,
+        ...rest,
         placement: 0,
         loops: 0,
         x: "x"
     }
 
-    logger(augmentedData)
-
+    const allFields = Object.keys(augmentedData)
     const orderedAllowedFields = ["name", "updatedAt", "seconds", "loops", "x"]
-    orderedAllowedFields.forEach((key) => {
+    allFields.forEach((key) => {
         let cell = document.createElement('td');
-        if ( key !== "loops" && key !== "x"){
+        cell.classList.add(`${key}`);
+        
+        
+        if (orderedAllowedFields.includes(key)) {
             
-            let text = document.createTextNode(augmentedData[key]);
-            cell.append(text);
-            row.append(cell);
-        }
-        else if (key === "loops") {
-            let loopDiv = createLoopDiv(count);
-            cell.append(loopDiv)
+            if ( key !== "loops" && key !== "x"){
+            
+                let text = document.createTextNode(augmentedData[key]);
+                cell.append(text);
+                row.append(cell);
+            }
+            else if (key === "loops") {
+                let loopDiv = createLoopDiv(count);
+                cell.append(loopDiv)
+                row.append(cell)
+            }
+            else if (key === "x") {
+               let buttonRemove = document.createElement('button');
+                buttonRemove.textContent = 'Delete';
+                buttonRemove.className = 'custom-button tableButton';
+                buttonRemove.addEventListener('click', () => {
+                    const rowToRemove = buttonRemove.closest('tr');
+                    rowToRemove.remove();
+                });
+                cell.append(buttonRemove)
+                row.append(cell)
+            }
+
+        } else {
+            let hiddenText = document.createTextNode(augmentedData[key]);
+            cell.style.display = 'none';
+            cell.append(hiddenText);
             row.append(cell)
         }
-        else if (key === "x") {
-           let buttonRemove = document.createElement('button');
-            buttonRemove.textContent = 'Delete';
-            buttonRemove.className = 'custom-button tableButton';
-            buttonRemove.addEventListener('click', () => {
-                const rowToRemove = buttonRemove.closest('tr');
-                rowToRemove.remove();
-            });
-            cell.append(buttonRemove)
-            row.append(cell)
-        }
+
+
     });
 
     count++;
@@ -109,7 +162,7 @@ function createMoveCreateNewRow(data){
     let idCell = document.createElement('td');
     idCell.style.display = 'none';
     idCell.textContent = data.id;
-    idCell.classList.add('row-id');
+    idCell.classList.add('id');
     row.append(idCell);
 
     const orderedAllowedFields = ["name", "updatedAt", "seconds", "description"]

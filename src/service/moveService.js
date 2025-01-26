@@ -122,10 +122,6 @@ function formatDate(date) {
     return dayjs(date).format('ddd, MM-DD-YYYY h:mm A');
 }
 
-// (async() => {
-//     const x = await getMove(9);
-//     console.log(x);
-// })()
 
 exports.searchMoves = searchMoves;
 exports.createMove = createMove;
