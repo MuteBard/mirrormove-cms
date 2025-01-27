@@ -3,6 +3,7 @@
 const moveCreateActionListRows = document.getElementById('moveCreateActionListRows');
 const moveCreateActionSearchSubmit = document.getElementById('moveCreateActionSearchSubmit');
 const selectedListRows = document.getElementById('selectedListRows');
+let currentMove;
 
 getMoveCreateTableData({
     name: "",
@@ -60,9 +61,63 @@ document.getElementById('MoveSave').addEventListener('click', async () => {
         })
         move.actionLoops.push(actionLoop);
     })
-    await createMove(move)
+    const response = await createMove(move);
+    currentMove = response[0]
     selectTable.innerHTML = "";
 })
+
+document.getElementById('MoveRun').addEventListener('click', async () => {
+    console.log("RUN");
+    prepRunWindow();
+    const action = convertMoveToBigAction(currentMove);
+    const totalWait = triggerAction(action, "run", 2000)
+    pullUpWindow(totalWait, prepDemoWindow)
+})
+
+
+function convertMoveToBigAction(move){
+   let steps =  move.actions
+            .map((value) => {
+                return [...Array(value.loops)].fill(value.action.steps);
+            })
+            .flatMap((_) => _)
+            .reduce(
+                (acc, steps, index) => {
+                    acc.sum += getTotalMoveStepDuration(steps, acc.sum);
+                    let alteredActions = steps;
+                    if (index != 0) {
+                        alteredActions = steps.map((step) => {
+                            return {
+                                ...step,
+                                time: step.time + acc.sum,
+                            };
+                        });
+                    }
+
+                    acc.actions.push(alteredActions);
+                    console.log(JSON.stringify(acc))
+                    return acc;
+                },
+                { actions: [], sum: 0 }
+            ).actions
+            .flatMap((_) => _)
+            .filter((action, index, list) => action.steps != -1 || !list[index + 1])
+
+
+    return { steps }
+}
+
+function getTotalMoveStepDuration(steps, bigSum) {
+    return steps.reduce((sum, step, index, list) => {
+        const prev = list[index - 1]?.time;
+        const curr = step.time;
+        if (!prev) return 0;
+        const diff = curr - prev;
+        sum += diff;
+        return sum;
+    }, bigSum);
+}
+
 
 async function getMoveCreateTableData(payload) {
     moveCreateActionListRows.innerHTML = '';

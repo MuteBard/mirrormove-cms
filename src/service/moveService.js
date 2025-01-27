@@ -89,7 +89,7 @@ function parseData(data) {
             const actions = d.Actions.map((al) => {
                 return {
                     loops: al.Loops,
-                    action: parseActionData([al.Action])
+                    action: parseActionData([al.Action])[0]
                 }
             })
             return {

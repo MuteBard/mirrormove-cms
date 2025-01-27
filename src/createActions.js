@@ -400,7 +400,6 @@ function getTotalStepDuration(steps) {
         const curr = step.time;
         if (!prev) return 0;
         const diff = curr - prev
-        console.log(diff)
         sum += diff;
         return sum;
     }, 0) / 1000
