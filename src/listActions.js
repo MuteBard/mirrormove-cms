@@ -53,6 +53,7 @@ document.getElementById('actionListRows').addEventListener('click', async (event
 
     if (clickedRow) {
         const id = clickedRow.querySelector('.row-id').textContent;
+
         setInitialState();
         createActions.classList.add('hidden');
         listActions.classList.add('hidden');

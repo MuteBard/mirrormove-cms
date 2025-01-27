@@ -19,11 +19,12 @@ navActionMenu.addEventListener("click", async () => {
 navMoveMenu.addEventListener("click", async () => {
     const createMoves = document.getElementById("createMoves");
     const listMoves = document.getElementById("listMoves");
-    // const updateMoves = document.getElementById("updateMoves");
+    const updateMoves = document.getElementById("updateMoves");
+    
     setInitialState();
     allMoves.classList.remove('hidden');
     allActions.classList.add('hidden');
     createMoves.classList.add('hidden');
     listMoves.classList.remove('hidden');
-    // updateMoves.classList.add('hidden');
+    updateMoves.classList.add('hidden');
 });

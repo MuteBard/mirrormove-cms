@@ -6,8 +6,11 @@
 //     }
 // });
 
+const moveUpdateActionListRows = document.getElementById('moveUpdateActionListRows');
 const moveListRows = document.getElementById('moveListRows');
 const moveSearchSubmit = document.getElementById('moveSearchSubmit');
+const selectedUpdateListRows = document.getElementById('selectedUpdateListRows');
+
 // const navMoveCreate = document.getElementById("navMoveCreate");
 // const demoMoveButton = document.getElementById("demoMove");
 // const actionInput = document.getElementById('actionNameInput');
@@ -22,7 +25,7 @@ const moveSearchSubmit = document.getElementById('moveSearchSubmit');
 
 // const actionName = actionInput.value;
 
-// let actionToUpdate;
+let moveToUpdate;
 // canvasContainerUpdate.appendChild(canvasUpdate);
 
 
@@ -40,33 +43,230 @@ getMoveTableData({
     name: "",
     orderBy: "NAME"
 });
+
+getMoveUpdateTableData({
+    name: "",
+    orderBy: "NAME"
+});
+
 listenForMoveTable();
 // updateRecords();
 // executeRecordsUpdate()
 
 
-// document.getElementById('actionListRows').addEventListener('click', async (event) => {
-//     const clickedRow = event.target.closest('tr'); 
-//     const createMoves = document.getElementById("createMoves");
-//     const listMoves = document.getElementById("listMoves");
-//     const updateMoves = document.getElementById("updateMoves");
+document.getElementById('moveListRows').addEventListener('click', async (event) => {
+    const clickedRow = event.target.closest('tr'); 
+    const createMoves = document.getElementById("createMoves");
+    const listMoves = document.getElementById("listMoves");
+    const updateMoves = document.getElementById("updateMoves");
 
-//     if (clickedRow) {
-//         const id = clickedRow.querySelector('.row-id').textContent;
-//         setInitialState();
-//         createMoves.classList.add('hidden');
-//         listMoves.classList.add('hidden');
-//         updateMoves.classList.remove('hidden');
+    if (clickedRow) {
+        const id = clickedRow.querySelector('.row-id').textContent;
+        setInitialState();
+        createMoves.classList.add('hidden');
+        listMoves.classList.add('hidden');
+        updateMoves.classList.remove('hidden');
 
-//         const actionGetData = await getMove(id);
-//         const actionNameInputUpdate = document.getElementById("actionNameInputUpdate");
-//         const actionDescriptionInputUpdate = document.getElementById("actionDescriptionInputUpdate");
+        const moveGetData = await getMove(id);
+   
+        const moveNameInputUpdate = document.getElementById("moveUpdateActionNameInput");
+        const moveDescriptionInputUpdate = document.getElementById("moveUpdateActionDescriptionInput");
 
-//         actionNameInputUpdate.value = actionGetData[0].name;
-//         actionDescriptionInputUpdate.value = actionGetData[0].description;
-//         actionToUpdate = actionGetData;
-//     }
-// });
+        moveNameInputUpdate.value = moveGetData[0].name;
+        moveDescriptionInputUpdate.value = moveGetData[0].description;
+        moveToUpdate = moveGetData;
+
+        getMoveUpdateSelectTableDataPreLoad(moveGetData);
+    }
+});
+
+async function getMoveUpdateTableData(payload) {
+    moveUpdateActionListRows.innerHTML = '';
+    const data = await searchActions(payload)
+    data.map((rowData) => {
+        row = updateMoveCreateNewRow(rowData)
+        moveUpdateActionListRows.append(row)
+    })
+}
+
+
+function updateMoveCreateNewRow(data){
+    let row = document.createElement('tr');
+
+    let idCell = document.createElement('td');
+    idCell.style.display = 'none';
+    idCell.textContent = data.id;
+    idCell.classList.add('id');
+    row.append(idCell);
+
+    const orderedAllowedFields = ["name", "updatedAt", "seconds", "description"]
+    orderedAllowedFields.forEach(key => {
+        let cell = document.createElement('td');
+        let text = document.createTextNode(data[key]);
+        cell.append(text);
+        row.append(cell);
+    });
+    return row;
+}
+
+function getMoveUpdateSelectTableDataPreLoad(payload) {
+    selectedUpdateListRows.innerHTML = '';
+    const data = payload[0].actions
+  
+    data.map((rowData) => {
+        addToUpdateSelectTableData(rowData)
+    })
+}
+
+
+function addToUpdateSelectTableData(data) {
+    console.log(data)
+    const {id, ...rest} = data.action
+
+    console.log(data)
+    
+    let row = document.createElement('tr');
+    let idCell = document.createElement('td');
+    idCell.style.display = 'none';
+    idCell.textContent = id;
+    idCell.classList.add('id');
+    row.append(idCell);
+
+
+    const augmentedData = {
+        ...rest,
+        loops: data.loops,
+        placement: 0,
+        x: "x"
+    }
+
+    console.log('augmentedData', augmentedData)
+
+    const allFields = Object.keys(augmentedData)
+    const orderedAllowedFields = ["name", "updatedAt", "seconds", "loops", "x"]
+    allFields.forEach((key) => {
+        let cell = document.createElement('td');
+        cell.classList.add(`${key}`);
+        
+        
+        if (orderedAllowedFields.includes(key)) {
+            
+            if ( key !== "loops" && key !== "x"){
+            
+                let text = document.createTextNode(augmentedData[key]);
+                cell.append(text);
+                row.append(cell);
+            }
+            else if (key === "loops") {
+                let loopDiv = createUpdateLoopDiv(count, data.loops);
+                cell.append(loopDiv)
+                row.append(cell)
+            }
+            else if (key === "x") {
+               let buttonRemove = document.createElement('button');
+                buttonRemove.textContent = 'Delete';
+                buttonRemove.className = 'custom-button tableButton';
+                buttonRemove.addEventListener('click', () => {
+                    const rowToRemove = buttonRemove.closest('tr');
+                    rowToRemove.remove();
+                });
+                cell.append(buttonRemove)
+                row.append(cell)
+            }
+
+        } else {
+            let hiddenText = document.createTextNode(augmentedData[key]);
+            cell.style.display = 'none';
+            cell.append(hiddenText);
+            row.append(cell)
+        }
+
+
+    });
+
+    count++;
+    selectedUpdateListRows.append(row);
+}
+
+
+
+document.getElementById('moveUpdateActionListRows').addEventListener('click', async (event) => {
+    const clickedRow = event.target.closest('tr'); 
+
+    if (clickedRow) {
+        const id = clickedRow.querySelector('.id').textContent;
+        const actionGetData = await getAction(id);
+
+        addToSelectUpdateTableData(actionGetData)
+    }
+});
+
+
+
+async function addToSelectUpdateTableData(data) {
+    const action = data[0];
+
+    const {id, ...rest} = action
+    
+    let row = document.createElement('tr');
+    let idCell = document.createElement('td');
+    idCell.style.display = 'none';
+    idCell.textContent = id;
+    idCell.classList.add('id');
+    row.append(idCell);
+
+
+    const augmentedData = {
+        ...rest,
+        placement: 0,
+        loops: 0,
+        x: "x"
+    }
+
+    const allFields = Object.keys(augmentedData)
+    const orderedAllowedFields = ["name", "updatedAt", "seconds", "loops", "x"]
+    allFields.forEach((key) => {
+        let cell = document.createElement('td');
+        cell.classList.add(`${key}`);
+        
+        
+        if (orderedAllowedFields.includes(key)) {
+            
+            if ( key !== "loops" && key !== "x"){
+            
+                let text = document.createTextNode(augmentedData[key]);
+                cell.append(text);
+                row.append(cell);
+            }
+            else if (key === "loops") {
+                let loopDiv = createLoopDiv(count);
+                cell.append(loopDiv)
+                row.append(cell)
+            }
+            else if (key === "x") {
+               let buttonRemove = document.createElement('button');
+                buttonRemove.textContent = 'Delete';
+                buttonRemove.className = 'custom-button tableButton';
+                buttonRemove.addEventListener('click', () => {
+                    const rowToRemove = buttonRemove.closest('tr');
+                    rowToRemove.remove();
+                });
+                cell.append(buttonRemove)
+                row.append(cell)
+            }
+
+        } else {
+            let hiddenText = document.createTextNode(augmentedData[key]);
+            cell.style.display = 'none';
+            cell.append(hiddenText);
+            row.append(cell)
+        }
+    });
+
+    count++;
+    selectedUpdateListRows.append(row);
+}
+
 
 // function updateRecords() {
 //     const saveMoveButton = document.getElementById("saveMoveUpdate");
@@ -124,8 +324,6 @@ function listenForMoveTable(){
             isHidden: searchMoveCheckbox?.checked
         };
 
-        console.log(payload)
-        
         getMoveTableData(payload) 
     });
 }
@@ -141,11 +339,11 @@ async function getMoveTableData(payload) {
 
 function createNewMoveRow(data){
     let row = document.createElement('tr');
-    // let idCell = document.createElement('td');
-    // idCell.style.display = 'none';
-    // idCell.textContent = data.id;
-    // idCell.classList.add('row-id');
-    // row.append(idCell);
+    let idCell = document.createElement('td');
+    idCell.style.display = 'none';
+    idCell.textContent = data.id;
+    idCell.classList.add('row-id');
+    row.append(idCell);
 
     const orderedAllowedFields = ["name", "updatedAt", "seconds", "description"]
     orderedAllowedFields.forEach(key => {
@@ -318,3 +516,45 @@ function createNewMoveRow(data){
 // }
 
 
+function createUpdateLoopDiv(id, value) {
+    // Create a div element
+    const divElement = document.createElement('div');
+
+    // Create a button element for increasing value
+    const buttonIncrease = document.createElement('button');
+    buttonIncrease.textContent = '+';
+    buttonIncrease.id = `loopInputIncrease-${id}`;
+    buttonIncrease.className = 'custom-button tableButton';
+
+    // Create an input element
+    const loopElement = document.createElement('input');
+    loopElement.type = 'text';
+    loopElement.id = `loopValue-${id}`;
+    loopElement.className = 'search-input mini-input';
+    loopElement.placeholder = value || 1;
+
+    // Create a button element for decreasing value
+    const buttonDecrease = document.createElement('button');
+    buttonDecrease.textContent = '-';
+    buttonDecrease.id = `loopInputDecrease-${id}`;
+    buttonDecrease.className = 'custom-button tableButton';
+
+    // Append the elements to the div
+    divElement.appendChild(buttonIncrease);
+    divElement.appendChild(loopElement);
+    divElement.appendChild(buttonDecrease);
+
+    // Increase and decrease functionality
+    let counter = 1;
+    buttonIncrease.addEventListener('click', () => {
+        counter++;
+        loopElement.value = counter;
+    });
+
+    buttonDecrease.addEventListener('click', () => {
+        counter--;
+        loopElement.value = counter;
+    });
+
+    return divElement;
+}
