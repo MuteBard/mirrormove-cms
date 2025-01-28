@@ -108,6 +108,7 @@ function updateRecords() {
             await deleteAction(actionToUpdate[0]?.id);
         });
     });
+    
 }
 
 function listenForTable(){

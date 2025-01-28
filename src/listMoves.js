@@ -188,6 +188,32 @@ function addToUpdateSelectTableData(data) {
     selectedUpdateListRows.append(row);
 }
 
+document.getElementById('MoveRunUpdate').addEventListener('click', async () => {
+    console.log("RUN");
+    prepRunWindow();
+    const action = convertMoveToBigAction(moveToUpdate[0]);
+    const totalWait = triggerAction(action, "run", 2000)
+    pullUpWindow(totalWait, prepDemoWindow)
+})
+
+document.getElementById('deleteMoveUpdate').addEventListener('click', async () => {
+    console.log("DELETE");
+    const createMoves = document.getElementById("createMoves");
+    const listMoves = document.getElementById("listMoves");
+    const updateMoves = document.getElementById("updateMoves");
+    
+    setInitialState();
+    allMoves.classList.remove('hidden');
+    allActions.classList.add('hidden');
+    createMoves.classList.add('hidden');
+    listMoves.classList.remove('hidden');
+    updateMoves.classList.add('hidden');
+    console.log(moveToUpdate[0]?.id)
+    await deleteMove(moveToUpdate[0]?.id);
+})
+
+
+
 
 
 document.getElementById('moveUpdateActionListRows').addEventListener('click', async (event) => {

@@ -76,6 +76,7 @@ document.getElementById('MoveRun').addEventListener('click', async () => {
 
 
 function convertMoveToBigAction(move){
+
    let steps =  move.actions
             .map((value) => {
                 return [...Array(value.loops)].fill(value.action.steps);
