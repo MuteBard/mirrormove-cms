@@ -11,7 +11,7 @@ Furthermore, actions can be grouped together in a "move". A move is capable of c
 ## Prerequisites
 
 - Ensure that the following dependent services are running:
-    * content-service/mirrormove is running at 8080
+    * content-service/mirrormove-crud is running at 8080
 
 - Ensure that you create `env.js` at `./src/service/env.js`
 ```
