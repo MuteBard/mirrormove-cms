@@ -2,7 +2,15 @@ const axios = require("axios");
 const dayjs = require('dayjs')
 const { log } = require("../util/log");
 const jwt = require("jsonwebtoken");
-const secretKey = "Metagross";
+
+let secretKey = "";
+try {
+    const { key } = require("./env") // create your own 
+    secretKey = key
+} catch(e) {
+    console.log(e)
+    secretKey = ""
+}
 
 const contentServiceHost = "http://localhost:8080";
 
@@ -75,14 +83,14 @@ function parseData(data) {
         } catch (err) {
             console.log(err)
             return {
-                id: d.Id,
-                name: d.Name,
-                createdAt: d.CreatedAt,
-                updatedAt: d.UpdatedAt,
-                isHidden: d.IsHidden,
-                description: d.Description,
-                seconds: d.Seconds,
-                steps: null,
+                id: "hidden",
+                name: "hidden",
+                createdAt: "hidden",
+                updatedAt: "hidden",
+                isHidden: "hidden",
+                description: "hidden",
+                seconds: "hidden",
+                steps: "hidden",
             };
         }
     });

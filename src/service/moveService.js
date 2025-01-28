@@ -2,7 +2,15 @@ const axios = require("axios");
 const dayjs = require('dayjs')
 const { log } = require("../util/log");
 const jwt = require("jsonwebtoken");
-const secretKey = "Metagross";
+let secretKey = "";
+try {
+    const { key } = require("./env")
+    secretKey = key
+} catch(e) {
+    console.log(e)
+    secretKey = ""
+}
+
 
 const contentServiceHost = "http://localhost:8080";
 
@@ -54,31 +62,17 @@ function prepareBody(data) {
 function parseActionData(data) {
     return data.map((d) => {
         const { Token } = d;
-        try {
-            const { steps } = jwt.verify(Token, secretKey);
-            return {
-                id: d.Id,
-                name: d.Name,
-                createdAt: formatDate(d.CreatedAt),
-                updatedAt: formatDate(d.UpdatedAt),
-                isHidden: d.IsHidden,
-                description: d.Description,
-                seconds: d.Seconds,
-                steps
-            };
-        } catch (err) {
-            console.log(err)
-            return {
-                id: d.Id,
-                name: d.Name,
-                createdAt: d.CreatedAt,
-                updatedAt: d.UpdatedAt,
-                isHidden: d.IsHidden,
-                description: d.Description,
-                seconds: d.Seconds,
-                steps: null,
-            };
-        }
+        const { steps } = jwt.verify(Token, secretKey);
+        return {
+            id: d.Id,
+            name: d.Name,
+            createdAt: formatDate(d.CreatedAt),
+            updatedAt: formatDate(d.UpdatedAt),
+            isHidden: d.IsHidden,
+            description: d.Description,
+            seconds: d.Seconds,
+            steps
+        };
     });
 }
 
@@ -105,14 +99,14 @@ function parseData(data) {
         } catch (err) {
             console.log(err)
             return {
-                id: d.Id,
-                name: d.Name,
-                createdAt: formatDate(d.CreatedAt),
-                updatedAt: formatDate(d.UpdatedAt),
-                isHidden: d.IsHidden,
-                description: d.Description,
-                seconds: d.Seconds,
-                actions: null
+                id: "hidden",
+                name: "hidden",
+                createdAt: "hidden",
+                updatedAt: "hidden",
+                isHidden: "hidden",
+                description: "hidden",
+                seconds: "hidden",
+                actions: "hidden",
             };
         }
     });
