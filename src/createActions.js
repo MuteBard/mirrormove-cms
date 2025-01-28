@@ -1,4 +1,3 @@
-const { log, safeExec } = require("./util/log");
 const { searchActions, createAction, getAction, deleteAction, updateAction } = require("./service/actionService");
 const { searchMoves, createMove, getMove, deleteMove, updateMove } = require("./service/moveService");
 const { click, clickMove, keyPress } = require("./service/mirrorService");
@@ -6,7 +5,6 @@ const { click, clickMove, keyPress } = require("./service/mirrorService");
 
 const canvasContainer = document.getElementById("canvasContainer");
 const canvas = document.createElement("canvas");
-const terminal = document.getElementById("terminal");
 
 const screenWidth = window.innerWidth;
 const screenHeight = window.innerHeight;
@@ -16,7 +14,6 @@ canvas.height = screenHeight - 40;
 const ctx = canvas.getContext("2d");
 
 
-terminal.style.padding = '1em';
 step = 0;
 let isDragging = false;
 let recordedData = [];
@@ -66,12 +63,6 @@ window.addEventListener('keydown', function(event) {
 });
 
 function listenToMovement() {
-    
-    log(terminal, true);
-    log(terminal, 3);
-    log(terminal, "abc");
-    log(terminal, {a:2, b:3})
-
     
     window.addEventListener('keydown', function(event) {
         // Check if the pressed key is the spacebar (key code 32)
@@ -167,14 +158,12 @@ function saveRecords() {
         window.scrollTo({
             top: 0
         });
-        log(terminal, "Logging started")
-        safeExec(terminal, listenToMovement)
+        listenToMovement()
 
     });
 
-    saveActionButton.addEventListener("click", () => {
+    saveActionButton.addEventListener("click", async () => {
         isLogging = false;
-        log(terminal, "Logging saved")
 
         const reversedCopy = [...recordedData].reverse();
         const index = reversedCopy.findIndex((data) => data.action === "click");
@@ -196,17 +185,15 @@ function saveRecords() {
             seconds,
             steps
         }
-        safeExec(terminal, async () => {
-            await createAction(data);
-        })
+      
+        await createAction(data);
+
         const containersToShow = document.querySelectorAll('.saveToggled');
         containersToShow.forEach(container => container.style.display = 'flex');
     });
 
     cancelActionButton.addEventListener("click", () => {
         setInitialState();
-        log(terminal, "Logging canceled")
-        log(terminal, isLogging)
         
         const actionNameInput = document.getElementById('actionNameInput');
         actionNameInput.value = "";
@@ -233,7 +220,6 @@ function executeRecords(){
     runActionButton.addEventListener("click", async () => {
         setInitialState();
         prepRunWindow();
-        log(terminal, "run started");
         const action = await searchActions(actionName);
         const totalWait = triggerAction(action[0], "run", 2000)
         pullUpWindow(totalWait, prepDemoWindow)
@@ -242,7 +228,6 @@ function executeRecords(){
     demoActionButton.addEventListener("click", async () => {
         setInitialState();
         prepDemoWindow();
-        log(terminal, "demo started");
         const action = await searchActions(actionName);
         triggerAction(action[0], "demo", 2000)
     });
@@ -273,7 +258,6 @@ function triggerAction(action, executionType, milliOffset) {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     createBoxLetter(key)
                 }
-                log(terminal, ts?.step?.key);  
             }
             else if (action === "click" || action === "click_move" ){
                 if (executionType === "run"){
@@ -284,7 +268,7 @@ function triggerAction(action, executionType, milliOffset) {
                     ctx.clearRect(x, y, width, height);
                     drawLine(position);
                 }
-                log(terminal, position)
+
             }
             
         }, ts.wait)
@@ -403,9 +387,4 @@ function getTotalStepDuration(steps) {
         sum += diff;
         return sum;
     }, 0) / 1000
-}
-
-function logger(data){
-    typeof data === object ? JSON.stringify(data) : data
-    log(terminal, data)
 }

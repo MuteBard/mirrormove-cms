@@ -1,6 +1,5 @@
 const axios = require("axios");
 const dayjs = require('dayjs')
-const { log } = require("../util/log");
 const jwt = require("jsonwebtoken");
 let secretKey = "";
 try {

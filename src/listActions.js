@@ -41,7 +41,11 @@ getTableData({
     orderBy: "NAME"
 });
 listenForTable();
-updateRecords();
+(() => {
+    updateRecords();
+
+
+})()
 executeRecordsUpdate()
 
 
@@ -69,14 +73,14 @@ document.getElementById('actionListRows').addEventListener('click', async (event
     }
 });
 
-function updateRecords() {
+async function updateRecords() {
     const saveActionButton = document.getElementById("saveActionUpdate");
     const deleteActionButton = document.getElementById("deleteActionUpdate");
     const createActions = document.getElementById("createActions");
     const listActions = document.getElementById("listActions");
     const updateActions = document.getElementById("updateActions");
 
-    saveActionButton.addEventListener("click", () => {
+    saveActionButton.addEventListener("click", async () => {
         createActions.classList.add('hidden');
         listActions.classList.remove('hidden');
         updateActions.classList.add('hidden');
@@ -91,22 +95,16 @@ function updateRecords() {
             name,
             description
         }
-
-        safeExec(terminal, async () => {
-            await updateAction(data);
-        });
+        await updateAction(data);
     });
 
-    deleteActionButton.addEventListener("click", () => {
+    deleteActionButton.addEventListener("click", async () => {
         createActions.classList.add('hidden');
         listActions.classList.remove('hidden');
         updateActions.classList.add('hidden');
 
-        logger(actionToUpdate[0])
-
-        safeExec(terminal, async () => {
-            await deleteAction(actionToUpdate[0]?.id);
-        });
+        await deleteAction(actionToUpdate[0]?.id);
+    
     });
     
 }
@@ -158,11 +156,6 @@ function createNewRow(data){
     return row;
 }
 
-function logger(data){
-    typeof data === "object" ? JSON.stringify(data) : data
-    log(terminal, data)
-}
-
 function executeRecordsUpdate(){
     const runActionButton = document.getElementById("runActionUpdate");
     const demoActionButton = document.getElementById("demoActionUpdate");
@@ -180,7 +173,6 @@ function executeRecordsUpdate(){
         setInitialState();
         prepDemoWindowUpdate();
         const action = await searchActions(updateName);
-        logger(action)
         triggerActionUpdate(action[0], "demo", 2000)
     });
 }
@@ -210,7 +202,6 @@ function triggerActionUpdate(action, executionType, milliOffset) {
                     ctxUpdate.clearRect(0, 0, canvas.width, canvas.height);
                     createBoxLetterUpdate(key)
                 }
-                log(terminal, ts?.step?.key);  
             }
             else if (action === "click" || action === "click_move" ){
                 if (executionType === "run"){
@@ -221,7 +212,6 @@ function triggerActionUpdate(action, executionType, milliOffset) {
                     ctxUpdate.clearRect(x, y, width, height);
                     drawLineUpdate(position);
                 }
-                log(terminal, position)
             }
             
         }, ts.wait)

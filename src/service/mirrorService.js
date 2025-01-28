@@ -1,5 +1,4 @@
 const { mouse, straightTo, keyboard, Point, Button } = require("@nut-tree-fork/nut-js");
-const { log } = require("../util/log");
 
 async function click(position) {
 	const point = new Point(position.x, position.y);
