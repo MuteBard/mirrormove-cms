@@ -1,5 +1,5 @@
 # MirrorMove CMS
-This project interfaces content-service/mirrorMove
+This project interfaces [content-service/mirrorMove](https://github.com/MuteBard/content-service/tree/main/mirrorMove)
 
 ## Requirements
 - Node.js v22.8.0
