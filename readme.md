@@ -1,5 +1,5 @@
 # MirrorMove CMS
-This project interfaces content-Service/MirrorMove
+This project interfaces content-service/mirrorMove
 
 ## Requirements
 - Node.js v22.8.0
