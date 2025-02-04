@@ -10,13 +10,17 @@ Furthermore, actions can be grouped together in a "move". A move is capable of c
 
 ## Prerequisites
 
-- Ensure that the following dependent services are running:
-    * content-service/mirrormove-crud is running at 8080
+- Ensure that the following dependent services are running for local execution:
+    *  [mirrormove-crud](https://github.com/MuteBard/mirrormove-crud) is running at 8080
 
-- Ensure that you create `env.js` at `./src/service/env.js`
+- Ensure that you create `dev.env` at `./env/dev.env`
 ```
-exports.key = "CREATE YOUR OWN PASSCODE";
+JWT_STEP_KEY=""
+JWT_SECRET_KEY=""
+CRUD_HOST="http://localhost"
+CRUD_PORT=8080
 ```
+
 
 ### Listing all actions![Listing all actions](ac-l.png)
 
@@ -32,7 +36,7 @@ exports.key = "CREATE YOUR OWN PASSCODE";
 
 `npm i`
 
-`npm start`
+`npm run dev`
 
 
 ## Video Demo
