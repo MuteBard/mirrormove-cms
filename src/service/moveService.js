@@ -1,98 +1,99 @@
 const axios = require("axios");
 const dayjs = require('dayjs')
 const jwt = require("jsonwebtoken");
-let secretKey = "";
-try {
-    const { key } = require("./env")
-    secretKey = key
-} catch(e) {
-    console.log(e)
-    secretKey = ""
+const { JWT, CRUD } = require("../../settings")
+const { generateToken } = require('./jwtTokenService')
+
+function getHeaders() {
+    return {
+      headers: {
+        Authorization: `Bearer ${generateToken()}`,
+      },
+    };
 }
 
-
-const contentServiceHost = "http://localhost:8080";
+const contentServiceHost = `${CRUD.host}:${CRUD.port}`;
 
 async function searchMoves(searchPayload) {
     const params = searchPayload;
     const response = await axios.get(`${contentServiceHost}/move/search`, {
+        ...getHeaders(),
         params,
     });
-    const result = parseData(response.data);
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function createMove(data) {
     const body = prepareBody(data);
-    const response = await axios.post(`${contentServiceHost}/move`, body);
-    const result = parseData(response.data);
+    const response = await axios.post(`${contentServiceHost}/move`, body, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function updateMove(data) {
     const body = prepareBody(data);
-    const response = await axios.patch(`${contentServiceHost}/move`, body);
-    const result = parseData(response.data);
+    const response = await axios.patch(`${contentServiceHost}/move`, body, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function getMove(id) {
-    const response = await axios.get(`${contentServiceHost}/move/${id}`);
-    const result = parseData(response.data);
+    const response = await axios.get(`${contentServiceHost}/move/id/${id}`, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function deleteMove(id) {
-    const response = await axios.delete(`${contentServiceHost}/move/${id}`);
-    const result = parseData(response.data);
+    const response = await axios.delete(`${contentServiceHost}/move/id/${id}`, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 function prepareBody(data) {
     return {
-        Id: data?.id || undefined,
-        Name: data.name,
-        Description: data.description,
-        Seconds: data.seconds,
-        ActionLoops: data?.actionLoops || undefined,
+        id: data?.id || undefined,
+        name: data.name,
+        description: data.description,
+        seconds: data.seconds,
+        actionLoops: data?.actionLoops || undefined,
     };
 }
 
 function parseActionData(data) {
     return data.map((d) => {
-        const { Token } = d;
-        const { steps } = jwt.verify(Token, secretKey);
+        const { token } = d;
+        const { steps } = jwt.verify(token, JWT.stepKey);
         return {
-            id: d.Id,
-            name: d.Name,
-            createdAt: formatDate(d.CreatedAt),
-            updatedAt: formatDate(d.UpdatedAt),
-            isHidden: d.IsHidden,
-            description: d.Description,
-            seconds: d.Seconds,
+            id: d.id,
+            name: d.name,
+            createdAt: formatDate(d.createdAt),
+            updatedAt: formatDate(d.updatedAt),
+            isHidden: d.isHidden,
+            description: d.description,
+            seconds: d.seconds,
             steps
         };
     });
 }
 
-
 function parseData(data) {
     return data.map((d, i) => {
         try {
-            const actions = d.Actions.map((al) => {
+            const actions = d.actions.map((al) => {
                 return {
-                    loops: al.Loops,
-                    action: parseActionData([al.Action])[0]
+                    loops: al.loops,
+                    action: parseActionData([al.action])[0]
                 }
             })
             return {
-                id: d.Id,
-                name: d.Name,
-                createdAt: formatDate(d.CreatedAt),
-                updatedAt: formatDate(d.UpdatedAt),
-                isHidden: d.IsHidden,
-                description: d.Description,
-                seconds: d.Seconds,
+                id: d.id,
+                name: d.name,
+                createdAt: formatDate(d.createdAt),
+                updatedAt: formatDate(d.updatedAt),
+                isHidden: d.isHidden,
+                description: d.description,
+                seconds: d.seconds,
                 actions
             };
         } catch (err) {

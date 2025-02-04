@@ -2,10 +2,10 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+	scrollbar-width:none;
+	scrollbar-color: #3d3b63 #7b78af;
 	/* border: green 2px solid; */
 }
-
-
 
 body {
 	background-color: transparent !important;
@@ -283,13 +283,19 @@ input::placeholder, textarea::placeholder {
 
 .shortScrollableTable {
 	display: flex;
-	flex-direction: column; /* Ensure flex items stack vertically */
-	max-height: 20em; /* Set the maximum height before scrolling starts */
-	overflow: auto; /* Enable scrolling when content exceeds the max-height */
+	flex-direction: column;
+	max-height: 20em;
+	overflow: auto;
 	width: 75%;
-  }
+}
 
-
+.tallScrollableTable {
+	display: flex;
+	justify-content: center;
+	max-height: 60em; 
+	overflow: auto; 
+	width: 110%;
+}
 
 .table {
 	color: #55576b;
@@ -415,10 +421,4 @@ background-color: #3d3b63;
 
 .element::-webkit-scrollbar-track {
 background-color: #7b78af;
-}
-
-/* Works in Firefox */
-.element {
-scrollbar-width:none;
-scrollbar-color: #3d3b63 #7b78af;
 }

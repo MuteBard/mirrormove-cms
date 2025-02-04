@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nw src/",
+    "dev": "node ./env/initEnvs.js dev",
     "win": "nwbuild --platform win --arch x64 --outDir dist/run --glob=false src",
     "macos": "nwbuild --platform osx --outDir dist/run --glob=false src",
     "clean": "node cleanup.js"

@@ -81,18 +81,20 @@
                             <button id="navActionCreate" class="custom-button tableButton">Create New Action</button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead class="actionTable">
-                            <tr>
-                                <th class="radtl">Name</th>
-                                <th>Updated At</th>
-                                <th>Seconds</th>
-                                <th class="radtr">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody id="actionListRows">
-                        </tbody>
-                    </table>
+                    <div class="tallScrollableTable element">
+                        <table class="table">
+                            <thead class="actionTable">
+                                <tr>
+                                    <th class="radtl">Name</th>
+                                    <th>Updated At</th>
+                                    <th>Seconds</th>
+                                    <th class="radtr">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="actionListRows">
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
             <div id="updateActions" class="hidden">
@@ -215,7 +217,7 @@
                     </div>
                 </div>
             </div>
-            <div id="listMoves" class="">
+            <div id="listMoves" class="center">
                 <div class="tableContainer">
                     <div class="tableTopBar">
                         <div class="tableSearch">
@@ -254,19 +256,21 @@
                             <button id="navMoveCreate" class="custom-button tableButton">Create New Move</button>
                         </div>
                     </div>
-                    <table class="table">
-                        <thead class="moveTable">
-                            <tr>
-                                <th class="radtl">ID</th>
-                                <th>Name</th>
-                                <th>Updated At</th>
-                                <th>Seconds</th>
-                                <th class="radtr">Description</th>
-                            </tr>
-                        </thead>
-                        <tbody id="moveListRows">
-                        </tbody>
-                    </table>
+                    <div class="tallScrollableTable element">
+                        <table class="table">
+                            <thead class="moveTable">
+                                <tr>
+                                    <th class="radtl">ID</th>
+                                    <th>Name</th>
+                                    <th>Updated At</th>
+                                    <th>Seconds</th>
+                                    <th class="radtr">Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="moveListRows">
+                            </tbody>
+                        </table> 
+                    </div>
                 </div>
             </div>
             <div id="updateMoves" class="hidden">

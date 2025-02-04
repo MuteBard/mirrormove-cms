@@ -2,49 +2,52 @@ const axios = require("axios");
 const dayjs = require('dayjs')
 const jwt = require("jsonwebtoken");
 
-let secretKey = "";
-try {
-    const { key } = require("./env") // create your own 
-    secretKey = key
-} catch(e) {
-    console.log(e)
-    secretKey = ""
+const { JWT, CRUD } = require("../../settings")
+const { generateToken } = require('./jwtTokenService')
+
+function getHeaders() {
+    return {
+      headers: {
+        Authorization: `Bearer ${generateToken()}`,
+      },
+    };
 }
 
-const contentServiceHost = "http://localhost:8080";
+const contentServiceHost = `${CRUD.host}:${CRUD.port}`;
 
 async function searchActions(searchPayload) {
     const params = searchPayload;
     const response = await axios.get(`${contentServiceHost}/action/search`, {
+        ...getHeaders(),
         params,
     });
-    const result = parseData(response.data);
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function createAction(data) {
     const body = prepareBody(data);
-    const response = await axios.post(`${contentServiceHost}/action`, body);
-    const result = parseData(response.data);
+    const response = await axios.post(`${contentServiceHost}/action`, body, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function updateAction(data) {
     const body = prepareBody(data);
-    const response = await axios.patch(`${contentServiceHost}/action`, body);
-    const result = parseData(response.data);
+    const response = await axios.patch(`${contentServiceHost}/action`, body, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function getAction(id) {
-    const response = await axios.get(`${contentServiceHost}/action/${id}`);
-    const result = parseData(response.data);
+    const response = await axios.get(`${contentServiceHost}/action/id/${id}`, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
 async function deleteAction(id) {
-    const response = await axios.delete(`${contentServiceHost}/action/${id}`);
-    const result = parseData(response.data);
+    const response = await axios.delete(`${contentServiceHost}/action/id/${id}`, getHeaders());
+    const result = parseData(response.data.data);
     return result;
 }
 
@@ -53,30 +56,29 @@ function prepareBody(data) {
         steps: data.steps,
     };
 
-    const Token = jwt.sign(payload, secretKey);
+    const token = jwt.sign(payload, JWT.stepKey);
     return {
-        Id: data?.id || undefined,
-        Name: data.name,
-        Description: data.description,
-        Seconds: data.seconds,
-        Token
+        id: data?.id || undefined,
+        name: data.name,
+        description: data.description,
+        seconds: data.seconds,
+        token
     };
 }
-
 function parseData(data) {
     return data.map((d) => {
-        const { Token } = d;
+        const { token } = d;
         try {
-            const { steps } = jwt.verify(Token, secretKey);
+            const { steps } = jwt.verify(token, JWT.stepKey);
 
             return {
-                id: d.Id,
-                name: d.Name,
-                createdAt: formatDate(d.CreatedAt),
-                updatedAt: formatDate(d.UpdatedAt),
-                isHidden: d.IsHidden,
-                description: d.Description,
-                seconds: d.Seconds,
+                id: d.id,
+                name: d.name,
+                createdAt: formatDate(d.createdAt),
+                updatedAt: formatDate(d.updatedAt),
+                isHidden: d.isHidden,
+                description: d.description,
+                seconds: d.seconds,
                 steps,
             };
         } catch (err) {
@@ -94,7 +96,6 @@ function parseData(data) {
         }
     });
 }
-
 
 function formatDate(date) {    
     return dayjs(date).format('ddd, MM-DD-YYYY h:mm A');
