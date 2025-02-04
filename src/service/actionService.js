@@ -83,18 +83,9 @@ function parseData(data) {
             };
         } catch (err) {
             console.log(err)
-            return {
-                id: "hidden",
-                name: "hidden",
-                createdAt: "hidden",
-                updatedAt: "hidden",
-                isHidden: "hidden",
-                description: "hidden",
-                seconds: "hidden",
-                steps: "hidden",
-            };
+            return null;
         }
-    });
+    }).filter(_ => _);
 }
 
 function formatDate(date) {    

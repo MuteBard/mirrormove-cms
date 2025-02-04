@@ -100,11 +100,7 @@ function getMoveUpdateSelectTableDataPreLoad(payload) {
 
 
 function addToUpdateSelectTableData(data) {
-    console.log(data)
-    const {id, ...rest} = data.action
-
-    console.log(data)
-    
+    const {id, ...rest} = data.action    
     let row = document.createElement('tr');
     let idCell = document.createElement('td');
     idCell.style.display = 'none';
@@ -119,8 +115,6 @@ function addToUpdateSelectTableData(data) {
         placement: 0,
         x: "x"
     }
-
-    console.log('augmentedData', augmentedData)
 
     const allFields = Object.keys(augmentedData)
     const orderedAllowedFields = ["name", "updatedAt", "seconds", "loops", "x"]
@@ -168,16 +162,56 @@ function addToUpdateSelectTableData(data) {
     selectedUpdateListRows.append(row);
 }
 
+document.getElementById('MoveSaveUpdate').addEventListener('click', async () => {
+    const moveName = document.getElementById('moveUpdateActionNameInput')?.value;
+    const moveDescription = document.getElementById('moveUpdateActionDescriptionInput')?.value;
+    const move = {
+        id: moveToUpdate[0].id,
+        isHidden: moveToUpdate[0].isHidden,
+        name: moveName,
+        description: moveDescription,
+        seconds: 0,
+        actionLoops: []
+    };
+
+    const selectTable = document.getElementById('selectedUpdateListRows');
+    const trList = Array.from(selectTable.getElementsByTagName('tr'));
+    trList.forEach((tr, index) => {
+        
+        const actionLoop = {};
+        const tdElemList = tr.getElementsByTagName('td');
+        const savedLoops = Number(document.getElementById(`loopValue-${index + 1}`)?.value || 1)
+        
+        const tdList = Array.from(tdElemList)
+        tdList.forEach((td) => {
+
+            if (td.className === 'id') {
+                actionLoop['ActionId'] = Number(td.innerText);
+            }
+            
+            if (td.className === 'loops') {  
+                actionLoop['Loops'] = savedLoops;
+            }
+
+            if (td.className === 'seconds') {
+                move.seconds += Number(td.innerText) * savedLoops;
+            }
+        })
+        move.actionLoops.push(actionLoop);
+    })
+    const response = await updateMove(move);
+    currentMove = response[0]
+    selectTable.innerHTML = "";
+})
+
 document.getElementById('MoveRunUpdate').addEventListener('click', async () => {
-    console.log("RUN");
     prepRunWindow();
     const action = convertMoveToBigAction(moveToUpdate[0]);
     const totalWait = triggerAction(action, "run", 2000)
     pullUpWindow(totalWait, prepDemoWindow)
 })
 
-document.getElementById('deleteMoveUpdate').addEventListener('click', async () => {
-    console.log("DELETE");
+document.getElementById('MoveDelete').addEventListener('click', async () => {
     const createMoves = document.getElementById("createMoves");
     const listMoves = document.getElementById("listMoves");
     const updateMoves = document.getElementById("updateMoves");
@@ -188,7 +222,6 @@ document.getElementById('deleteMoveUpdate').addEventListener('click', async () =
     createMoves.classList.add('hidden');
     listMoves.classList.remove('hidden');
     updateMoves.classList.add('hidden');
-    console.log(moveToUpdate[0]?.id)
     await deleteMove(moveToUpdate[0]?.id);
 })
 

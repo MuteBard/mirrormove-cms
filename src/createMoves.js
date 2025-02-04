@@ -25,8 +25,6 @@ document.getElementById('moveCreateActionListRows').addEventListener('click', as
 });
 
 document.getElementById('MoveSave').addEventListener('click', async () => {
-    console.log("SAVED")
-
     const moveName = document.getElementById('moveCreateActionNameInput')?.value;
     const moveDescription = document.getElementById('moveCreateActionDescriptionInput')?.value;
     const move = {
@@ -67,7 +65,6 @@ document.getElementById('MoveSave').addEventListener('click', async () => {
 })
 
 document.getElementById('MoveRun').addEventListener('click', async () => {
-    console.log("RUN");
     prepRunWindow();
     const action = convertMoveToBigAction(currentMove);
     const totalWait = triggerAction(action, "run", 2000)
@@ -96,7 +93,6 @@ function convertMoveToBigAction(move){
                     }
 
                     acc.actions.push(alteredActions);
-                    console.log(JSON.stringify(acc))
                     return acc;
                 },
                 { actions: [], sum: 0 }
@@ -171,7 +167,6 @@ async function addToSelectTableData(data) {
     allFields.forEach((key) => {
         let cell = document.createElement('td');
         cell.classList.add(`${key}`);
-        
         
         if (orderedAllowedFields.includes(key)) {
             
